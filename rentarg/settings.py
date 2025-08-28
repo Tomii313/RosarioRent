@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "salones",
     "autenticacion",
     "usuarios",
+    "oficinas",
+
 ]
 
 MIDDLEWARE = [

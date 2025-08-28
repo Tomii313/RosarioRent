@@ -1,75 +1,48 @@
 from django.shortcuts import render
-from .models import salones, ImagenSalon
+from .models import Oficina, ImagenOficina
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
-from .forms import FormularioSalones
+from .forms import FormularioOficinas
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib import messages
+# Create your views here.
+
+def oficinas_view(request):
+    oficinas_list = Oficina.objects.all()
+    return render(request, 'oficinas.html', {'oficinas': oficinas_list})
 
 
-
-def salones_view(request):
-    salones_list = salones.objects.all()
-    return render(request, "salones.html", {"salones":salones_list})
-
-def salones_informacion(request,id):
-    salonesinfo = salones.objects.get(id=id)
-    return render(request, "salones_informacion.html", {"salon": salonesinfo})
-
-
-def alquileres(request):
-    salones_list = salones.objects.all()
-
-    precio_max = request.GET.get('precio_max')
-    disponibles = request.GET.get('disponibles')
-    capacidad = request.GET.get('capacidad')
-
-    if precio_max:
-        try:
-            precio_max = int(precio_max)
-            salones_list = salones_list.filter(precio__lte=precio_max)
-        except ValueError:
-            pass
-
-    if disponibles == 'on':
-        salones_list = salones_list.filter(disponible=True)
-
-    if capacidad:
-        try:
-            capacidad = int(capacidad)
-            salones_list = salones_list.filter(capacidad__lte=capacidad)
-        except ValueError:
-            pass
-
-    return render(request, "salones.html", {"salones": salones_list})
+def oficinas_informacion(request, id):
+    oficina_info = Oficina.objects.get(id=id)
+    return render(request, 'oficinas_informacion.html', {'oficina': oficina_info})
 
 
 @login_required
-def publicar_salones(request):
+def publicar_oficina(request):
     if request.user.tipo != 'propietario':
         return redirect('home')
     
     if request.method == 'POST':
-        form = FormularioSalones(request.POST, request.FILES)
+        form = FormularioOficinas(request.POST, request.FILES)
         if form.is_valid():
-            salon = form.save(commit=False)
-            salon.propietario = request.user
-            salon.save()
+            oficina = form.save(commit=False)
+            oficina.propietario = request.user
+            oficina.save()
 
             for imagen in request.FILES.getlist('imagenes'):
-                ImagenSalon.objects.create(salon=salon, imagen=imagen)
+                ImagenOficina.objects.create(oficina=oficina, imagen=imagen)
             return redirect('home')
     else:
-        form = FormularioSalones()
+        form = FormularioOficinas()
 
-    return render(request, 'publicar_salon.html', {'form': form})
+    return render(request, 'publicar_oficina.html', {'form': form})
 
 
 
 def contactar_propietario(request, publicacion_id):
     if request.method == "POST":
-        publicacion = get_object_or_404(salones, id=publicacion_id)
+        publicacion = get_object_or_404(Oficina, id=publicacion_id)
         propietario = publicacion.propietario
         propietario_email = propietario.email
 
@@ -102,3 +75,4 @@ def contactar_propietario(request, publicacion_id):
         return redirect('home')
 
     return redirect('home')
+
