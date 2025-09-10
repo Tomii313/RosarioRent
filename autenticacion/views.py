@@ -4,6 +4,7 @@ from .forms import FormularioRegistro, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 
 class VRegistro(View):
@@ -35,4 +36,16 @@ class VLogin(View):
             return redirect('home')  # Cambiá 'home' por la vista que quieras mostrar después del login
           else:
             return render(request, 'login.html', {'form': form, 'mensaje': 'Credenciales inválidas'})
+          
+
+
+def cuenta(request):
+  return render(request, 'cuenta.html', {'user': request.user})
+
+@login_required
+def eliminar_cuenta(request):
+    if request.method == 'POST':
+        request.user.delete()
+        return redirect('login')
+    return render(request, 'confirmar_eliminar.html')
                 

@@ -47,6 +47,7 @@ class Departamentos(models.Model):
     habitaciones = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 habitación'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     banos = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 baño'), MaxValueValidator(8, message="Seleccione una cantidad correcta")])
     disponibilidad = models.BooleanField(default=True)
+    aprobado = models.BooleanField(default=False)
     zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
    
 

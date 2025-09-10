@@ -9,7 +9,7 @@ from django.contrib import messages
 # Create your views here.
 
 def oficinas_view(request):
-    oficinas_list = Oficina.objects.all()
+    oficinas_list = Oficina.objects.filter(aprobado=True)
     return render(request, 'oficinas.html', {'oficinas': oficinas_list})
 
 
@@ -28,6 +28,7 @@ def publicar_oficina(request):
         if form.is_valid():
             oficina = form.save(commit=False)
             oficina.propietario = request.user
+            oficina.aprobado = False
             oficina.save()
 
             for imagen in request.FILES.getlist('imagenes'):

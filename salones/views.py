@@ -10,7 +10,7 @@ from django.contrib import messages
 
 
 def salones_view(request):
-    salones_list = salones.objects.all()
+    salones_list = salones.objects.filter(aprobado=True)
     return render(request, "salones.html", {"salones":salones_list})
 
 def salones_informacion(request,id):
@@ -55,6 +55,7 @@ def publicar_salones(request):
         if form.is_valid():
             salon = form.save(commit=False)
             salon.propietario = request.user
+            salon.aprobado = False
             salon.save()
 
             for imagen in request.FILES.getlist('imagenes'):

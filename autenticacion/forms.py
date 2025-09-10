@@ -45,9 +45,16 @@ class FormularioRegistro(UserCreationForm):
         widget=forms.Select(attrs={
             "class": "form-control"})
         )
+    
+    tipo_publicacion = forms.ChoiceField(
+        label="Tipo de propiedad que puede publicar",
+        choices=UsuarioPersonalizado.TIPO_PUBLICACION,
+       
+        widget=forms.Select(attrs={"class": "form-control"})
+)
     class Meta:
         model = UsuarioPersonalizado
-        fields = ["email","username", "password1", "password2", "tipo"]
+        fields = ["email","username", "password1", "password2", "tipo", 'tipo_publicacion']
 
 
 class AuthenticationForm(AuthenticationForm):
@@ -66,7 +73,5 @@ class AuthenticationForm(AuthenticationForm):
                 "placeholder": "Ingresa tu contraseña"
             })
         )
-class Meta:
-        model = UsuarioPersonalizado
-        fields = ["email","username", "password1", "password2", "tipo"]
+
 

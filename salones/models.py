@@ -10,6 +10,7 @@ class salones(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     disponible = models.BooleanField(default=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
+    aprobado = models.BooleanField(default=False)
     imagen = models.ImageField(upload_to="salones/", blank=True, null=True)
   
 

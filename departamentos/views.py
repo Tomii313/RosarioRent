@@ -10,9 +10,7 @@ from django.shortcuts import redirect, get_object_or_404
 from .models import Departamentos, ImagenDepartamento
 
 # Create your views here.
-def alquileres(request):
-    departamentos = Departamentos.objects.all()
-    return render(request, "departamentos.html", {"departamentos": departamentos})
+
 
 
 def departamento_informacion(request, id):
@@ -21,7 +19,7 @@ def departamento_informacion(request, id):
 
 
 def alquileres(request):
-    departamentos = Departamentos.objects.all()
+    departamentos = Departamentos.objects.filter(aprobado=True)
 
     precio_max = request.GET.get('precio_max')
     habitaciones = request.GET.get('habitaciones')
@@ -57,6 +55,7 @@ def publicar_departamento(request):
         if form.is_valid():
             departamento = form.save(commit=False)
             departamento.propietario = request.user
+            departamento.aprobado = False
             departamento.save()
 
             for imagen in request.FILES.getlist('imagenes'):
