@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from .models import Oficina, ImagenOficina
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from .forms import FormularioOficinas
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib import messages
+from usuarios.models import Comentario
+from usuarios.forms import ComentarioForm
+from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
 # Create your views here.
 
 def oficinas_view(request):
@@ -14,9 +18,38 @@ def oficinas_view(request):
 
 
 def oficinas_informacion(request, id):
-    oficina_info = Oficina.objects.get(id=id)
-    return render(request, 'oficinas_informacion.html', {'oficina': oficina_info})
+    oficina_info = get_object_or_404(Oficina, id=id)
+    oficina_type = ContentType.objects.get_for_model(Oficina)
+   
 
+
+    # Filtramos los comentarios de esa oficina
+    comentarios_list = Comentario.objects.filter(
+        content_type=oficina_type,
+        object_id=oficina_info.id
+    ).order_by('-creado')
+
+    paginator = Paginator(comentarios_list, 5)
+    page_number = request.GET.get('page')
+    comentarios = paginator.get_page(page_number)
+    if request.method == "POST":
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.content_type = oficina_type
+            comentario.object_id = oficina_info.id
+            comentario.save()
+            # 👇 El redirect ahora usa el nombre correcto de la URL
+            return redirect("oficinas_informacion", id=id)
+    else:
+        form = ComentarioForm()
+
+    return render(request, "oficinas_informacion.html", {
+    "oficina": oficina_info,
+    "comentarios": comentarios,
+    "form": form,
+})
 
 @login_required
 def publicar_oficina(request):

@@ -2,20 +2,52 @@ from django.shortcuts import render
 from .models import Departamentos, ImagenDepartamento
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from .forms import FormularioDepartamento
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from .models import Departamentos, ImagenDepartamento
-
+from django.contrib.contenttypes.models import ContentType
 # Create your views here.
 
 
 
+# departamentos/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from usuarios.models import Comentario
+from usuarios.forms import ComentarioForm
+from .models import Departamentos
+
 def departamento_informacion(request, id):
-    departamentos = Departamentos.objects.get(id=id)
-    return render(request, "departamento_informacion.html", {"departamento": departamentos})
+    
+    departamento = get_object_or_404(Departamentos, id=id)
+    tipo = ContentType.objects.get_for_model(Departamentos)
+
+    comentarios_list = Comentario.objects.filter(content_type=tipo, object_id=departamento.id).order_by('-creado')
+
+    #PAGINADOR
+    paginator = Paginator(comentarios_list, 5)
+    page_number = request.GET.get('page')
+    comentarios = paginator.get_page(page_number)
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.content_type = tipo
+            comentario.object_id = departamento.id
+            comentario.save()
+            return redirect('departamento_informacion', id=id)
+    else:
+        form = ComentarioForm()
+
+    return render(request, "departamento_informacion.html", {
+        "departamento": departamento,
+        "comentarios": comentarios,
+        "form": form,
+    })
 
 
 def alquileres(request):

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-
+from django.conf import settings
 # Create your models here.
 
 class UsuarioPersonalizado(AbstractUser):
@@ -23,7 +23,7 @@ class UsuarioPersonalizado(AbstractUser):
 
 
 class Comentario(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     texto = models.TextField()
     estrellas = models.IntegerField(default=5)
     creado = models.DateTimeField(auto_now_add=True)
@@ -32,3 +32,19 @@ class Comentario(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     publicacion = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.publicacion} {self.estrellas}"
+
+
+class Favorito(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    publicacion = GenericForeignKey("content_type", "object_id")
+    agregado = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.publicacion}"
+
+  

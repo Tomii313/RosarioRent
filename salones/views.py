@@ -6,6 +6,12 @@ from .forms import FormularioSalones
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib import messages
+from usuarios.models import Comentario
+from usuarios.forms import ComentarioForm
+from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
+
+# Create your views here.
 
 
 
@@ -15,7 +21,30 @@ def salones_view(request):
 
 def salones_informacion(request,id):
     salonesinfo = salones.objects.get(id=id)
-    return render(request, "salones_informacion.html", {"salon": salonesinfo})
+    salones_type = ContentType.objects.get_for_model(salones)
+
+
+    # Filtramos los comentarios de ese salón
+    comentarios_list = Comentario.objects.filter(
+        content_type=salones_type,
+        object_id=salonesinfo.id
+    ).order_by('-creado')
+
+    paginator = Paginator(comentarios_list, 5)
+    page_number = request.GET.get('page')
+    comentarios = paginator.get_page(page_number)
+    if request.method == "POST":
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.content_type = salones_type
+            comentario.object_id = salonesinfo.id
+            comentario.save()
+            return redirect("salones_informacion", id=id)
+    else:
+        form = ComentarioForm()
+    return render(request, "salones_informacion.html", {"salon": salonesinfo, "comentarios": comentarios,"form": form})
 
 
 def alquileres(request):
