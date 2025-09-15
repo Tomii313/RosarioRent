@@ -1,5 +1,5 @@
 from django.urls import path
-from . views import VRegistro, VLogin, cuenta, eliminar_cuenta
+from . views import VRegistro, VLogin, cuenta, eliminar_cuenta, favoritos
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -10,6 +10,7 @@ urlpatterns = [
     path("login/", VLogin.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page="home"), name="logout"),
     path("cuenta/", view=cuenta,name='cuenta'),
+    path("favoritos/", view=favoritos, name="favoritos"),
     
         path('cambiar-contraseña/', auth_views.PasswordChangeView.as_view(
         template_name='cambiar_contrasena.html',  # tu template

@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from usuarios.models import Favorito
+from django.core.paginator import Paginator
 
 
 class VRegistro(View):
@@ -49,3 +51,11 @@ def eliminar_cuenta(request):
         return redirect('login')
     return render(request, 'confirmar_eliminar.html')
                 
+
+@login_required
+def favoritos(request):
+    favoritos_list = Favorito.objects.filter(usuario=request.user)
+    paginator = Paginator(favoritos_list, 5)
+    page_number = request.GET.get('page')
+    favoritos = paginator.get_page(page_number)
+    return render(request, "favoritos.html", {"favoritos":favoritos})

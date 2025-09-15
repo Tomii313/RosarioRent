@@ -17,9 +17,19 @@ class UsuarioPersonalizado(AbstractUser):
         ('oficina','Oficinas'),
         ('salon', 'Salones'),
     )
+    nombre = models.CharField(max_length=150)
+    apellido = models.CharField(max_length=250)
+    dni = models.CharField(max_length=30, unique=True)
+    
 
     tipo = models.CharField(max_length=20, choices=TIPO_USUARIO, default='inquilino')
     tipo_publicacion = models.CharField(max_length=20, choices=TIPO_PUBLICACION, blank=True, null=True)
+
+
+    baneado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.apellido}"
 
 
 class Comentario(models.Model):

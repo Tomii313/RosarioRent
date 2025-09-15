@@ -10,6 +10,7 @@ from usuarios.models import Comentario
 from usuarios.forms import ComentarioForm
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from usuarios.models import Favorito
 # Create your views here.
 
 def oficinas_view(request):
@@ -22,7 +23,13 @@ def oficinas_informacion(request, id):
     oficina_type = ContentType.objects.get_for_model(Oficina)
    
 
-
+    en_favoritos = False
+    if request.user.is_authenticated:
+        en_favoritos = Favorito.objects.filter(
+            usuario=request.user,
+            content_type=oficina_type,
+            object_id=oficina_info.id
+        ).exists()
     # Filtramos los comentarios de esa oficina
     comentarios_list = Comentario.objects.filter(
         content_type=oficina_type,
@@ -42,6 +49,22 @@ def oficinas_informacion(request, id):
             comentario.save()
             # 👇 El redirect ahora usa el nombre correcto de la URL
             return redirect("oficinas_informacion", id=id)
+    if request.method == "POST":
+        if "favorito" in request.POST:
+        # ✔ Checkbox marcado → crear favorito
+         Favorito.objects.get_or_create(
+            usuario=request.user,
+            content_type=oficina_type,
+            object_id=oficina_info.id
+            )
+        else:
+            # ❌ Checkbox desmarcado → borrar favorito
+            Favorito.objects.filter(
+                usuario=request.user,
+                content_type=oficina_type,
+                object_id=oficina_info.id
+            ).delete()
+        return redirect("oficinas_informacion", id=id)
     else:
         form = ComentarioForm()
 
@@ -49,6 +72,7 @@ def oficinas_informacion(request, id):
     "oficina": oficina_info,
     "comentarios": comentarios,
     "form": form,
+    "en_favoritos": en_favoritos
 })
 
 @login_required

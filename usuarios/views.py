@@ -5,6 +5,7 @@ from salones.models import salones
 from departamentos.models import Departamentos
 from oficinas.models import Oficina
 from .forms import ComentarioForm
+from django.contrib.auth.decorators import login_required
 
 def departamento_informacion(request, id):
     departamento = get_object_or_404(Departamentos, id=id)
@@ -28,7 +29,7 @@ def departamento_informacion(request, id):
     })
 
 
-def toggle_favorito(request, modelo, id)
+def toggle_favorito(request, modelo, id):
     if not request.user.is_authenticated:
         return redirect('login')
 
@@ -67,3 +68,9 @@ def mis_favoritos(request):
     favoritos = Favorito.objects.filter(usuario=request.user).order_by("-agregado")
     # todos los favoritos del usuario, los más nuevos primero
     return render(request, "mis_favoritos.html", {"favoritos": favoritos})
+
+@login_required
+def baneado(request):
+    if not getattr(request.user, "baneado", False):
+        return redirect("home")
+    return render(request, "baneado.html")

@@ -10,6 +10,7 @@ from usuarios.models import Comentario
 from usuarios.forms import ComentarioForm
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from usuarios.models import Favorito
 
 # Create your views here.
 
@@ -19,12 +20,20 @@ def salones_view(request):
     salones_list = salones.objects.filter(aprobado=True)
     return render(request, "salones.html", {"salones":salones_list})
 
-def salones_informacion(request,id):
+@login_required
+def salones_informacion(request, id):
     salonesinfo = salones.objects.get(id=id)
     salones_type = ContentType.objects.get_for_model(salones)
 
+    en_favoritos = False
+    if request.user.is_authenticated:
+        en_favoritos = Favorito.objects.filter(
+            usuario=request.user,
+            content_type=salones_type,
+            object_id=salonesinfo.id
+        ).exists()
 
-    # Filtramos los comentarios de ese salón
+    # Comentarios de ese salón
     comentarios_list = Comentario.objects.filter(
         content_type=salones_type,
         object_id=salonesinfo.id
@@ -33,20 +42,43 @@ def salones_informacion(request,id):
     paginator = Paginator(comentarios_list, 5)
     page_number = request.GET.get('page')
     comentarios = paginator.get_page(page_number)
+
+    form = ComentarioForm()
+
     if request.method == "POST":
-        form = ComentarioForm(request.POST)
-        if form.is_valid():
-            comentario = form.save(commit=False)
-            comentario.usuario = request.user
-            comentario.content_type = salones_type
-            comentario.object_id = salonesinfo.id
-            comentario.save()
+        # Si es comentario
+        if "texto" in request.POST:  # nombre del campo del form
+            form = ComentarioForm(request.POST)
+            if form.is_valid():
+                comentario = form.save(commit=False)
+                comentario.usuario = request.user
+                comentario.content_type = salones_type
+                comentario.object_id = salonesinfo.id
+                comentario.save()
+                return redirect("salones_informacion", id=id)
+
+        # Si es toggle de favoritos
+        elif "favorito" in request.POST:
+            Favorito.objects.get_or_create(
+                usuario=request.user,
+                content_type=salones_type,
+                object_id=salonesinfo.id
+            )
             return redirect("salones_informacion", id=id)
-    else:
-        form = ComentarioForm()
-    return render(request, "salones_informacion.html", {"salon": salonesinfo, "comentarios": comentarios,"form": form})
+        else:
+            Favorito.objects.filter(
+                usuario=request.user,
+                content_type=salones_type,
+                object_id=salonesinfo.id
+            ).delete()
+            return redirect("salones_informacion", id=id)
 
-
+    return render(request, "salones_informacion.html", {
+        "salon": salonesinfo,
+        "comentarios": comentarios,
+        "form": form,
+        "en_favoritos": en_favoritos
+    })
 def alquileres(request):
     salones_list = salones.objects.all()
 

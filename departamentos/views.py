@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from .models import Departamentos, ImagenDepartamento
 from django.contrib.contenttypes.models import ContentType
+from usuarios.models import Favorito
 # Create your views here.
 
 
@@ -24,6 +25,14 @@ def departamento_informacion(request, id):
     
     departamento = get_object_or_404(Departamentos, id=id)
     tipo = ContentType.objects.get_for_model(Departamentos)
+
+    en_favoritos = False
+    if request.user.is_authenticated:
+        en_favoritos = Favorito.objects.filter(
+            usuario=request.user,
+            content_type=tipo,
+            object_id=departamento.id
+        ).exists()
 
     comentarios_list = Comentario.objects.filter(content_type=tipo, object_id=departamento.id).order_by('-creado')
 
@@ -40,6 +49,22 @@ def departamento_informacion(request, id):
             comentario.object_id = departamento.id
             comentario.save()
             return redirect('departamento_informacion', id=id)
+    if request.method == "POST":
+        if "favorito" in request.POST:
+        # ✔ Checkbox marcado → crear favorito
+         Favorito.objects.get_or_create(
+            usuario=request.user,
+            content_type=tipo,
+            object_id=departamento.id
+            )
+        else:
+            # ❌ Checkbox desmarcado → borrar favorito
+            Favorito.objects.filter(
+                usuario=request.user,
+                content_type=tipo,
+                object_id=departamento.id
+            ).delete()
+        return redirect("departamento_informacion", id=id)
     else:
         form = ComentarioForm()
 
@@ -47,6 +72,7 @@ def departamento_informacion(request, id):
         "departamento": departamento,
         "comentarios": comentarios,
         "form": form,
+        "en_favoritos": en_favoritos
     })
 
 
