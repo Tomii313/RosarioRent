@@ -58,11 +58,11 @@ class FormularioRegistro(UserCreationForm):
 
 
 class AuthenticationForm(AuthenticationForm):
-      username = forms.CharField(
-        label="Usuario",
-        widget=forms.TextInput(attrs={
+      username= forms.EmailField(
+        label="Correo",
+        widget=forms.EmailInput(attrs={
             "class": "form-control",
-            "placeholder": "Ingresa tu nombre de usuario"
+            "placeholder": "Ingrese su correo"
         })
 
       )
@@ -74,4 +74,4 @@ class AuthenticationForm(AuthenticationForm):
             })
         )
 
-
+      

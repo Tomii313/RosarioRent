@@ -17,19 +17,22 @@ class UsuarioPersonalizado(AbstractUser):
         ('oficina','Oficinas'),
         ('salon', 'Salones'),
     )
-    nombre = models.CharField(max_length=150)
-    apellido = models.CharField(max_length=250)
-    dni = models.CharField(max_length=30, unique=True)
+   # nombre = models.CharField(max_length=150)
+    #apellido = models.CharField(max_length=250)
+    #dni = models.CharField(max_length=30, unique=True)
     
-
+    email = models.EmailField(unique=True)
     tipo = models.CharField(max_length=20, choices=TIPO_USUARIO, default='inquilino')
     tipo_publicacion = models.CharField(max_length=20, choices=TIPO_PUBLICACION, blank=True, null=True)
+
+    USERNAME_FIELD = 'email'  # <--- esto hace que Django use email para login
+    REQUIRED_FIELDS = ['username']  # username sigue existiendo pero no para login
 
 
     baneado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.apellido}"
+        return f"{self.username}"
 
 
 class Comentario(models.Model):
