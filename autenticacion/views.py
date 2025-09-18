@@ -18,9 +18,8 @@ class VRegistro(View):
             form = FormularioRegistro(request.POST)
             if form.is_valid():
                  user = form.save()
-                 username = form.cleaned_data.get('username')
                  raw_password = form.cleaned_data.get('password1')  # asumiendo que usás UserCreationForm
-                 user = authenticate(username=username, password=raw_password)
+                 user = authenticate(request, email=user.email, password=raw_password)
                  if user is not None:
                   login(request, user)
                   return redirect('home')

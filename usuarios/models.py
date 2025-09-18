@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class UsuarioPersonalizado(AbstractUser):
@@ -17,9 +18,13 @@ class UsuarioPersonalizado(AbstractUser):
         ('oficina','Oficinas'),
         ('salon', 'Salones'),
     )
-   # nombre = models.CharField(max_length=150)
-    #apellido = models.CharField(max_length=250)
-    #dni = models.CharField(max_length=30, unique=True)
+    nombre = models.CharField(max_length=150)
+    apellido = models.CharField(max_length=250)
+    dni = models.CharField(max_length=30, blank=True, null=True)
+    direccion = models.CharField(max_length=150)
+    num_calle = models.IntegerField(validators=[MinValueValidator(0, message="El número no puede ser menor a 0."), MaxValueValidator(10000, message="El número no puede ser mayor a 10.000")])
+    ciudad = models.CharField(max_length=100)
+    nacimiento = models.DateField()
     
     email = models.EmailField(unique=True)
     tipo = models.CharField(max_length=20, choices=TIPO_USUARIO, default='inquilino')
