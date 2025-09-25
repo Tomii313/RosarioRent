@@ -11,11 +11,44 @@ from usuarios.forms import ComentarioForm
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from usuarios.models import Favorito
+from django.utils.dateparse import parse_date
 # Create your views here.
 
-def oficinas_view(request):
-    oficinas_list = Oficina.objects.filter(aprobado=True)
-    return render(request, 'oficinas.html', {'oficinas': oficinas_list})
+ #def oficinas_view(request):
+ #   oficinas_list = Oficina.objects.filter(aprobado=True)
+  #  return render(request, 'oficinas.html', {'oficinas': oficinas_list})
+
+
+def alquileres(request):
+    oficinas = Oficina.objects.filter(aprobado=True)
+
+    precio_max = request.GET.get('precio_max')
+    ambientes = request.GET.get('ambientes')
+    disponibles = request.GET.get('disponibles') #checkbox ON o none
+   
+    moneda = request.GET.get('moneda')
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+
+    if precio_max:
+        oficinas = oficinas.filter(precio__lte=precio_max)
+
+    if moneda:
+        oficinas = oficinas.filter(monedas=moneda)
+    
+    if ambientes:
+        oficinas = oficinas.filter(ambientes=ambientes)
+
+    if disponibles == 'on':
+        oficinas = oficinas.filter(disponible=True)
+
+
+    if fecha_desde:
+        oficinas = oficinas.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
+    if fecha_hasta:
+        oficinas = oficinas.filter(fecha_publicacion__date__lte=parse_date(fecha_hasta))
+    
+    return render(request, "oficinas.html", {"oficinas": oficinas})
 
 
 def oficinas_informacion(request, id):
@@ -48,7 +81,7 @@ def oficinas_informacion(request, id):
             comentario.object_id = oficina_info.id
             comentario.save()
             # 👇 El redirect ahora usa el nombre correcto de la URL
-            return redirect("oficinas_informacion", id=id)
+            return redirect("oficina_informacion", id=id)
     if request.method == "POST":
         if "favorito" in request.POST:
         # ✔ Checkbox marcado → crear favorito
@@ -64,7 +97,7 @@ def oficinas_informacion(request, id):
                 content_type=oficina_type,
                 object_id=oficina_info.id
             ).delete()
-        return redirect("oficinas_informacion", id=id)
+        return redirect("oficina_informacion", id=id)
     else:
         form = ComentarioForm()
 
@@ -83,14 +116,16 @@ def publicar_oficina(request):
     if request.method == 'POST':
         form = FormularioOficinas(request.POST, request.FILES)
         if form.is_valid():
+           
             oficina = form.save(commit=False)
             oficina.propietario = request.user
             oficina.aprobado = False
+            messages.success(request, "Su publicación se ha realizado con éxito. En estos momentos se encuentra en estado PENDIENTE a la espera de ser aceptada.")
             oficina.save()
 
             for imagen in request.FILES.getlist('imagenes'):
                 ImagenOficina.objects.create(oficina=oficina, imagen=imagen)
-            return redirect('home')
+            return redirect('oficinas')
     else:
         form = FormularioOficinas()
 
@@ -133,4 +168,19 @@ def contactar_propietario(request, publicacion_id):
         return redirect('home')
 
     return redirect('home')
+
+
+def eliminarpublicacion(request,id):
+    message=None
+    
+    if request.method == 'POST':
+     oficina = get_object_or_404(Oficina,id=id)
+     if oficina:
+            oficina.delete()
+            messages.success(request,"Oficina eliminada correctamente.")
+            return redirect('oficinas')
+     else:
+            return redirect('oficinas')
+     return redirect('oficinas')
+
 

@@ -11,6 +11,7 @@ from django.shortcuts import redirect, get_object_or_404
 from .models import Departamentos, ImagenDepartamento
 from django.contrib.contenttypes.models import ContentType
 from usuarios.models import Favorito
+from django.utils.dateparse import parse_date
 # Create your views here.
 
 
@@ -48,7 +49,7 @@ def departamento_informacion(request, id):
             comentario.content_type = tipo
             comentario.object_id = departamento.id
             comentario.save()
-            return redirect('departamento_informacion', id=id)
+            return redirect('departamentos_informacion', id=id)
     if request.method == "POST":
         if "favorito" in request.POST:
         # ✔ Checkbox marcado → crear favorito
@@ -64,7 +65,7 @@ def departamento_informacion(request, id):
                 content_type=tipo,
                 object_id=departamento.id
             ).delete()
-        return redirect("departamento_informacion", id=id)
+        return redirect("departamentos_informacion", id=id)
     else:
         form = ComentarioForm()
 
@@ -76,6 +77,7 @@ def departamento_informacion(request, id):
     })
 
 
+
 def alquileres(request):
     departamentos = Departamentos.objects.filter(aprobado=True)
 
@@ -84,9 +86,15 @@ def alquileres(request):
     banos = request.GET.get('banos')
     disponibles = request.GET.get('disponibles') #checkbox ON o none
     zona = request.GET.get('zona')
+    moneda = request.GET.get('moneda')
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
 
     if precio_max:
         departamentos = departamentos.filter(precio__lte=precio_max)
+
+    if moneda:
+        departamentos = departamentos.filter(monedas=moneda)
     
     if habitaciones:
         departamentos = departamentos.filter(habitaciones=habitaciones)
@@ -100,6 +108,11 @@ def alquileres(request):
     
     if zona:
         departamentos = departamentos.filter(zona__icontains=zona)
+
+    if fecha_desde:
+        departamentos = departamentos.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
+    if fecha_hasta:
+        departamentos = departamentos.filter(fecha_publicacion__date__lte=parse_date(fecha_hasta))
     
     return render(request, "departamentos.html", {"departamentos": departamentos})
 
@@ -114,6 +127,7 @@ def publicar_departamento(request):
             departamento = form.save(commit=False)
             departamento.propietario = request.user
             departamento.aprobado = False
+            messages.success(request, "Su publicación se ha realizado con éxito. En estos momentos se encuentra en estado PENDIENTE a la espera de ser aceptada.")
             departamento.save()
 
             for imagen in request.FILES.getlist('imagenes'):
@@ -161,3 +175,32 @@ def contactar_propietario(request, publicacion_id):
         return redirect('home')
 
     return redirect('home')
+
+
+def eliminarpublicacion(request,id):
+    message=None
+    
+    if request.method == 'POST':
+     departamento = get_object_or_404(Departamentos,id=id)
+     if departamento:
+            departamento.delete()
+            messages.success(request,"Departamento eliminado correctamente.")
+            return redirect('departamentos')
+     else:
+            return redirect('departamentos')
+     return redirect('departamentos')
+
+
+#def editarcomentario(request, id):
+ #   comentario = get_object_or_404(Comentario,id=id)
+  #  if request.method == 'POST':
+   #     form = ComentarioForm(request.POST, instance=comentario)
+    #    if form.is_valid():
+     #       form.save()
+      #      messages.success(request, "Comentario editado correctamente.")
+       #     return redirect("departamento_informacion", id=comentario.object_id)
+    #else:
+     #   form = ComentarioForm(instance=comentario)
+
+   # return render(request, "editar_comentario.html", {"form": form, "comentario": comentario})
+    

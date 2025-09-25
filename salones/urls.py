@@ -6,5 +6,6 @@ urlpatterns = [
     #path("departamento/<int:id>/", views.departamento_informacion, name="departamento_informacion") 
     path("salon/<int:id>/", views.salones_informacion, name="salones_informacion"),
       path('publicar/', views.publicar_salones, name='publicar_salones'),
+      path('eliminar/<int:id>/',views.eliminarpublicacion, name="eliminar_salon")
 ]
 

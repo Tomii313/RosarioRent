@@ -35,12 +35,19 @@ BARRIOS = [
 
 ]
 
+
+
 class Departamentos(models.Model):
+    MONEDAS = [
+    ('ARS', 'Pesos Argentinos (ARS)'),
+    ('USD', 'Dólares (USD)'),
+    ]
     nombre = models.CharField(max_length=100, validators=[], error_messages={"blank": "El nombre no puede estar vacío", 'null': 'El nombre no puede ser nulo'})
     direccion = models.CharField(max_length=100)
     piso = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0, message="Seleccione un piso correcto") ,MaxValueValidator(20, message="Seleccione un piso correcto")])
-    departamento = models.IntegerField(null=True, blank=True)
+    departamento = models.CharField(max_length=2,null=True, blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
     descripcion = models.TextField()
     imagen = models.ImageField(upload_to="departamentos/", blank=True, null=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
@@ -59,7 +66,7 @@ class Departamentos(models.Model):
     )
 
     def __str__(self):
-        return f"{self.nombre} - {self.direccion} - {self.precio}"
+        return f"{self.nombre} - {self.direccion} - {self.precio} - {self.monedas}"
     
     class Meta:
          verbose_name = "Departamento"

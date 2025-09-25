@@ -11,6 +11,7 @@ from usuarios.forms import ComentarioForm
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from usuarios.models import Favorito
+from django.utils.dateparse import parse_date
 
 # Create your views here.
 
@@ -18,9 +19,35 @@ from usuarios.models import Favorito
 
 def salones_view(request):
     salones_list = salones.objects.filter(aprobado=True)
+
+    precio_max = request.GET.get('precio_max')
+    capacidad = request.GET.get('capacidad')
+    disponibles = request.GET.get('disponibles') #checkbox ON o none
+   
+    moneda = request.GET.get('moneda')
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+
+    if precio_max:
+        salones_list = salones_list.filter(precio__lte=precio_max)
+
+    if moneda:
+        salones_list = salones_list.filter(monedas=moneda)
+    
+    if capacidad:
+        salones_list = salones_list.filter(capacidad=capacidad)
+
+    if disponibles == 'on':
+        salones_list = salones_list.filter(disponible=True)
+
+
+    if fecha_desde:
+        salones_list = salones_list.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
+    if fecha_hasta:
+        salones_list = salones_list.filter(fecha_publicacion__date__lte=parse_date(fecha_hasta))
     return render(request, "salones.html", {"salones":salones_list})
 
-@login_required
+
 def salones_informacion(request, id):
     salonesinfo = salones.objects.get(id=id)
     salones_type = ContentType.objects.get_for_model(salones)
@@ -117,11 +144,12 @@ def publicar_salones(request):
             salon = form.save(commit=False)
             salon.propietario = request.user
             salon.aprobado = False
+            messages.success(request, "Su publicación se ha realizado con éxito. En estos momentos se encuentra en estado PENDIENTE a la espera de ser aceptada.")
             salon.save()
 
             for imagen in request.FILES.getlist('imagenes'):
                 ImagenSalon.objects.create(salon=salon, imagen=imagen)
-            return redirect('home')
+            return redirect('salones')
     else:
         form = FormularioSalones()
 
@@ -164,3 +192,18 @@ def contactar_propietario(request, publicacion_id):
         return redirect('home')
 
     return redirect('home')
+
+
+def eliminarpublicacion(request,id):
+    message=None
+    
+    if request.method == 'POST':
+     salon = get_object_or_404(salones,id=id)
+     if salon:
+            salon.delete()
+            messages.success(request,"Salón eliminado correctamente.")
+            return redirect('salones')
+     else:
+            return redirect('salones')
+     return redirect('salones')
+

@@ -6,6 +6,7 @@ from departamentos.models import Departamentos
 from oficinas.models import Oficina
 from .forms import ComentarioForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def departamento_informacion(request, id):
     departamento = get_object_or_404(Departamentos, id=id)
@@ -74,3 +75,43 @@ def baneado(request):
     if not getattr(request.user, "baneado", False):
         return redirect("home")
     return render(request, "baneado.html")
+
+
+
+def editar_comentario(request, id):
+    comentario = get_object_or_404(Comentario, id=id, usuario=request.user)
+    modelo = comentario.content_type.model  # "departamentos", "oficinas", "salones"
+    url_name = f"{modelo}_informacion"
+
+    if request.method == "POST":
+        form = ComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+
+            # dinámico: resuelve la URL según el tipo de publicación
+          
+            return redirect(url_name, comentario.object_id)
+    else:
+        form = ComentarioForm(instance=comentario)
+
+    return render(request, "editar_comentario.html", {
+        "form": form,
+        "comentario": comentario,
+        "url_name": url_name, 
+    })
+
+
+def eliminar_comentario(request,id):
+    
+    comentario = get_object_or_404(Comentario, id=id, usuario=request.user)
+    modelo = comentario.content_type.model  # "departamentos", "oficinas", "salones"
+    url_name = f"{modelo}_informacion"
+
+    if request.method == 'POST':
+     if comentario:
+        comentario.delete()
+        return redirect(url_name, comentario.object_id)
+    return render(request, "home.html", {
+        "comentario": comentario,
+        "url_name": url_name, 
+    })
