@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from usuarios.models import UsuarioPersonalizado
 from django.contrib.auth import get_user_model
+from multiselectfield import MultiSelectFormField
 
 User = get_user_model()
 
@@ -102,12 +103,12 @@ class FormularioRegistro(UserCreationForm):
             "class": "form-control"})
         )
     
-    tipo_publicacion = forms.ChoiceField(
+    tipo_publicacion = MultiSelectFormField(
         label="Tipo de propiedad que puede publicar",
         choices=UsuarioPersonalizado.TIPO_PUBLICACION,
         required=False,
        
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.CheckboxSelectMultiple()
 )
     class Meta:
         model = UsuarioPersonalizado
