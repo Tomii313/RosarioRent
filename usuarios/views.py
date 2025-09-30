@@ -7,6 +7,8 @@ from oficinas.models import Oficina
 from .forms import ComentarioForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import render
 
 def departamento_informacion(request, id):
     departamento = get_object_or_404(Departamentos, id=id)
@@ -115,3 +117,9 @@ def eliminar_comentario(request,id):
         "comentario": comentario,
         "url_name": url_name, 
     })
+
+
+
+    
+#def terminos():
+    

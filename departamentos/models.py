@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from geopy.geocoders import Nominatim
 
 # Create your models here.
 
@@ -44,6 +45,8 @@ class Departamentos(models.Model):
     ]
     nombre = models.CharField(max_length=100, validators=[], error_messages={"blank": "El nombre no puede estar vacío", 'null': 'El nombre no puede ser nulo'})
     direccion = models.CharField(max_length=100)
+    latitud = models.FloatField(blank=True, null=True)
+    longitud = models.FloatField(blank=True, null=True)
     piso = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0, message="Seleccione un piso correcto") ,MaxValueValidator(20, message="Seleccione un piso correcto")])
     departamento = models.CharField(max_length=2,null=True, blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
@@ -56,6 +59,7 @@ class Departamentos(models.Model):
     disponibilidad = models.BooleanField(default=True)
     aprobado = models.BooleanField(default=False)
     zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
+
    
 
     propietario = models.ForeignKey(

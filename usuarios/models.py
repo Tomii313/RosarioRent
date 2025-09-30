@@ -56,6 +56,7 @@ class Comentario(models.Model):
     object_id = models.PositiveIntegerField()
     publicacion = GenericForeignKey("content_type", "object_id")
 
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="respuestas")
     def __str__(self):
         return f"{self.usuario.username} - {self.publicacion} {self.estrellas}"
 

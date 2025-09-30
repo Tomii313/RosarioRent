@@ -5,4 +5,5 @@ from .views import contacto
 urlpatterns= [
     path("", views.home_view, name="home"),
     path("contacto/", contacto, name="contacto"),
+    path('chatbot/', views.chatbot, name='chatbot'), 
 ]
