@@ -6,7 +6,7 @@ class FormularioOficinas(forms.ModelForm):
         model = Oficina
         exclude = ['propietario', 'fecha_publicacion', 'imagen']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control',"oninput": "if(this.value.length > 100) this.value=this.value.slice(0,100);"}),
+           # 'nombre': forms.TextInput(attrs={'class': 'form-control',"oninput": "if(this.value.length > 100) this.value=this.value.slice(0,100);"}),
             'direccion': forms.TextInput(attrs={'class': 'form-control', "maxlength":"40",'oninput': 'if(this.value.length > 40) this.value=this.value.slice(0,40);'}),
             'ambientes': forms.NumberInput(attrs={'class': 'form-control', "min":"1", "max":"10",
             "oninput": "if(this.value.length > 2) this.value=this.value.slice(0,2);"}),

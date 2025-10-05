@@ -1,12 +1,16 @@
-from .models import salones, ImagenSalon
 from django.contrib import admin
+from .models import salones, ImagenSalon
 
-admin.site.register(salones)
-admin.site.register(ImagenSalon)
+# Inline para manejar las imágenes dentro del admin de Salones
+class ImagenSalonInline(admin.TabularInline):   # o admin.StackedInline
+    model = ImagenSalon
+    extra = 1            # cuántos campos vacíos mostrar por defecto
+    fields = ('imagen',)  # solo el campo que queremos mostrar
 
-# Register your models here.
-# The above code registers the 'salones' and 'ImagenSalon' models with the Django
-# admin site, allowing them to be managed through the Django admin interface.
-# This enables the admin interface to display and manage instances of these models.
-# The 'salones' model represents a salon with attributes like name, location, capacity,
-# description, price, availability, and publication date.
+# Admin personalizado para Salones
+@admin.register(salones)
+class SalonesAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'direccion', 'capacidad', 'precio', 'aprobado')
+    inlines = [ImagenSalonInline]
+
+# Ya no registramos ImagenSalon por separado

@@ -43,18 +43,18 @@ class Departamentos(models.Model):
     ('ARS', 'Pesos Argentinos (ARS)'),
     ('USD', 'Dólares (USD)'),
     ]
-    nombre = models.CharField(max_length=100, validators=[], error_messages={"blank": "El nombre no puede estar vacío", 'null': 'El nombre no puede ser nulo'})
+    nombre = models.CharField(null=True, blank=True,max_length=100, validators=[], error_messages={"blank": "El nombre no puede estar vacío", 'null': 'El nombre no puede ser nulo'})
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField(blank=True, null=True)
     longitud = models.FloatField(blank=True, null=True)
     piso = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0, message="Seleccione un piso correcto") ,MaxValueValidator(20, message="Seleccione un piso correcto")])
     departamento = models.CharField(max_length=2,null=True, blank=True)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999999999)])
     monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
     descripcion = models.TextField()
     imagen = models.ImageField(upload_to="departamentos/", blank=True, null=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
-    habitaciones = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 habitación'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
+    habitaciones = models.IntegerField(validators=[MinValueValidator(0, message='Inserte un valor valido'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     banos = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 baño'), MaxValueValidator(8, message="Seleccione una cantidad correcta")])
     disponibilidad = models.BooleanField(default=True)
     aprobado = models.BooleanField(default=False)
@@ -70,7 +70,7 @@ class Departamentos(models.Model):
     )
 
     def __str__(self):
-        return f"{self.nombre} - {self.direccion} - {self.precio} - {self.monedas}"
+        return f"{self.propietario.nombre} - {self.direccion} - {self.precio} - {self.monedas}"
     
     class Meta:
          verbose_name = "Departamento"

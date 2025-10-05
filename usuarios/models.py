@@ -27,7 +27,6 @@ class UsuarioPersonalizado(AbstractUser):
     telefono = models.CharField(max_length=30)
     direccion = models.CharField(max_length=150)
     num_calle = models.IntegerField(validators=[MinValueValidator(0, message="El número no puede ser menor a 0."), MaxValueValidator(10000, message="El número no puede ser mayor a 10.000")])
-    ciudad = models.CharField(max_length=100)
     nacimiento = models.DateField()
     
     email = models.EmailField(unique=True)

@@ -8,7 +8,7 @@ class Oficina(models.Model):
     ('ARS', 'Pesos Argentinos (ARS)'),
     ('USD', 'Dólares (USD)'),
     ]
-    nombre = models.CharField(max_length=100)
+    #nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
     ambientes = models.IntegerField(validators=[MinValueValidator(1, message="Debe tener al menos 1 ambiente"), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     piso = models.IntegerField(null=True, blank=True)
@@ -29,11 +29,11 @@ class Oficina(models.Model):
     
 
     def __str__(self):
-        return f"{self.nombre} - {self.direccion} - {self.ambientes} - {self.precio}"
+        return f"{self.propietario.nombre} - {self.direccion} - {self.ambientes} - {self.precio}"
 class ImagenOficina(models.Model):
     oficina = models.ForeignKey(Oficina, related_name="imagenes", on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to="oficinas/imagenes/", blank=True, null=False, default='media/oficinas/imagenes/default.jpg')
 
     def __str__(self):
-        return f"Imagen de {self.oficina.nombre}"
+        return f"Imagen de {self.oficina.direccion}"
 

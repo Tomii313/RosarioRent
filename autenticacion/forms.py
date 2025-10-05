@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from usuarios.models import UsuarioPersonalizado
 from django.contrib.auth import get_user_model
 from multiselectfield import MultiSelectFormField
-
+from django.forms.widgets import CheckboxInput
 User = get_user_model()
 
 class FormularioRegistro(UserCreationForm):
@@ -108,7 +108,7 @@ class FormularioRegistro(UserCreationForm):
         choices=UsuarioPersonalizado.TIPO_PUBLICACION,
         required=False,
        
-        widget=forms.CheckboxSelectMultiple()
+        widget=forms.CheckboxSelectMultiple(attrs={"class": "form-check-input"})
 )
     class Meta:
         model = UsuarioPersonalizado

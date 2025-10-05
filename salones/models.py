@@ -9,7 +9,7 @@ class salones(models.Model):
     ('USD', 'Dólares (USD)'),
     ]
     nombre = models.CharField(max_length=100)
-    ubicacion = models.CharField(max_length=200)
+    direccion = models.CharField(max_length=200)
     capacidad = models.IntegerField()
     descripcion = models.TextField(blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
@@ -27,7 +27,7 @@ class salones(models.Model):
     )
     
     def __str__(self):
-        return f"{self.nombre} - {self.ubicacion} - {self.capacidad} - {self.precio}"
+        return f"{self.nombre} - {self.direccion} - {self.capacidad} - {self.precio}"
 
 
 

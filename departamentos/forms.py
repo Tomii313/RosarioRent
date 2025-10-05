@@ -9,7 +9,7 @@ class FormularioDepartamento(forms.ModelForm):
         model = Departamentos
         exclude = ['propietario', 'fecha_publicacion', 'imagen']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control', "oninput": "if(this.value.length > 100) this.value=this.value.slice(0,100);"}),
+           # 'nombre': forms.TextInput(attrs={'class': 'form-control', "oninput": "if(this.value.length > 100) this.value=this.value.slice(0,100);"}),
             'direccion': forms.TextInput(attrs={'class': 'form-control',"oninput": "if(this.value.length > 30) this.value=this.value.slice(0,30);" }),
             'precio': forms.NumberInput(attrs={'class': 'form-control', "oninput": "if(this.value.length > 9) this.value=this.value.slice(0,9);" }),
             'monedas': forms.Select(attrs={'class': 'form-control'}),

@@ -12,6 +12,7 @@ from .models import Departamentos, ImagenDepartamento
 from django.contrib.contenttypes.models import ContentType
 from usuarios.models import Favorito
 from django.utils.dateparse import parse_date
+from django.http import HttpResponseForbidden
 # Create your views here.
 
 
@@ -48,6 +49,11 @@ def departamento_informacion(request, id):
             comentario.usuario = request.user
             comentario.content_type = tipo
             comentario.object_id = departamento.id
+
+            #respuestas
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                comentario.parent_id = parent_id
             comentario.save()
             return redirect('departamentos_informacion', id=id)
     if request.method == "POST":
@@ -81,6 +87,10 @@ def departamento_informacion(request, id):
 def alquileres(request):
     departamentos = Departamentos.objects.filter(aprobado=True)
 
+   
+
+
+
     precio_max = request.GET.get('precio_max')
     habitaciones = request.GET.get('habitaciones')
     banos = request.GET.get('banos')
@@ -113,13 +123,19 @@ def alquileres(request):
         departamentos = departamentos.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
     if fecha_hasta:
         departamentos = departamentos.filter(fecha_publicacion__date__lte=parse_date(fecha_hasta))
+
+    paginator = Paginator(departamentos, 8)  # Mostrar 6 departamentos por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     
-    return render(request, "departamentos.html", {"departamentos": departamentos})
+    return render(request, "departamentos.html", {"departamentos": page_obj, "page_obj": page_obj})
 
 @login_required
 def publicar_departamento(request):
-    if request.user.tipo != 'propietario':
-        return redirect('home')
+    if request.user.tipo != 'propietario' or 'departamento' not in request.user.tipo_publicacion:
+        return HttpResponseForbidden()
+        
     
     if request.method == 'POST':
         form = FormularioDepartamento(request.POST, request.FILES)
@@ -157,7 +173,7 @@ def contactar_propietario(request, publicacion_id):
             <h2>Interés en tu propiedad</h2>
             <p><strong>{usuario.username}</strong> está interesado/a en tu propiedad publicada en RosarioRent.</p>
             <p>Podés responderle al correo: <strong>{usuario.email}</strong></p>
-            <p>Detalle de la publicación: <strong>{publicacion.nombre}</strong></p>
+            <p>Detalle de la publicación: <strong>{publicacion.direccion}</strong></p>
             <img src="https://i.imgur.com/IOcX6HL.png" alt="RosarioRent" style="width: 150px; margin-top: 20px;" />
         </div>
         """

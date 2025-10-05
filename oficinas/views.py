@@ -12,6 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from usuarios.models import Favorito
 from django.utils.dateparse import parse_date
+from django.http import HttpResponseForbidden
 # Create your views here.
 
  #def oficinas_view(request):
@@ -47,8 +48,12 @@ def alquileres(request):
         oficinas = oficinas.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
     if fecha_hasta:
         oficinas = oficinas.filter(fecha_publicacion__date__lte=parse_date(fecha_hasta))
+
+    paginator = Paginator(oficinas, 8)  # Mostrar 6 departamentos por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
-    return render(request, "oficinas.html", {"oficinas": oficinas})
+    return render(request, "oficinas.html", {"oficinas":page_obj, "page_obj":page_obj})
 
 
 def oficinas_informacion(request, id):
@@ -79,6 +84,9 @@ def oficinas_informacion(request, id):
             comentario.usuario = request.user
             comentario.content_type = oficina_type
             comentario.object_id = oficina_info.id
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                comentario.parent_id = parent_id
             comentario.save()
             # 👇 El redirect ahora usa el nombre correcto de la URL
             return redirect("oficina_informacion", id=id)
@@ -110,8 +118,8 @@ def oficinas_informacion(request, id):
 
 @login_required
 def publicar_oficina(request):
-    if request.user.tipo != 'propietario':
-        return redirect('home')
+    if request.user.tipo != 'propietario' or 'oficina' not in request.user.tipo_publicacion:
+        return HttpResponseForbidden()
     
     if request.method == 'POST':
         form = FormularioOficinas(request.POST, request.FILES)
@@ -150,7 +158,7 @@ def contactar_propietario(request, publicacion_id):
             <h2>Interés en tu propiedad</h2>
             <p><strong>{usuario.username}</strong> está interesado/a en tu propiedad publicada en RosarioRent.</p>
             <p>Podés responderle al correo: <strong>{usuario.email}</strong></p>
-            <p>Detalle de la publicación: <strong>{publicacion.nombre}</strong></p>
+            <p>Detalle de la publicación: <strong>{publicacion.direccion}</strong></p>
             <img src="https://i.imgur.com/IOcX6HL.png" alt="RosarioRent" style="width: 150px; margin-top: 20px;" />
         </div>
         """
