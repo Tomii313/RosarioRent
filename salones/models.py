@@ -3,12 +3,43 @@ from django.conf import settings
 
 # Create your models here.
 
+
+BARRIOS = [
+     ("Centro", "Centro"),
+    ("Macrocentro", "Macrocentro"),
+    ("Echesortu", "Echesortu"),
+    ("Abasto", "Abasto"),
+    ("Tablada", "Tablada"),
+    ("Las Delicias", "Las Delicias"),
+    ("Fisherton", "Fisherton"),
+    ("Arroyito", "Arroyito"),
+    ("Pichincha", "Pichincha"),
+    ("Zona Norte", "Norte"),
+    ("Zona Oeste", "Oeste"),
+    ("Zona Este", "Este"),
+    ("Zona Sur", "Sur"),
+    ("Zona Suroeste", "Suroeste"),
+    ("Zona Sudeste", "Sudeste"),
+    ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
+    ("Granadero Baigorria", "Granadero Baigorria"),
+    ("Ricardone", "Ricardone"),
+    ("San Lorenzo", "San Lorenzo"),
+    ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Funes", "Funes"),
+    ("Roldán", "Roldán"),
+    ("Soldini", "Soldini"),
+    ("Pérez", "Pérez"),
+    ("Otro", "Otro")
+
+]
+
 class salones(models.Model):
     MONEDAS = [
     ('ARS', 'Pesos Argentinos (ARS)'),
     ('USD', 'Dólares (USD)'),
     ]
     nombre = models.CharField(max_length=100)
+    zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
     direccion = models.CharField(max_length=200)
     capacidad = models.IntegerField()
     descripcion = models.TextField(blank=True, null=True)

@@ -12,6 +12,7 @@ class OficinaAdmin(admin.ModelAdmin):
     list_display = ('direccion', 'ambientes', 'precio', 'disponible', 'aprobado')
     list_filter = ('disponible', 'aprobado', 'monedas')
     search_fields = ('direccion', 'descripcion')
+    list_editable = ('disponible', 'aprobado')
     inlines = [ImagenOficinaInline]  # 👉 esto agrega la galería de imágenes en la misma pantalla
 
 @admin.register(ImagenOficina)

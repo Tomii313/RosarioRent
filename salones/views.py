@@ -24,7 +24,7 @@ def salones_view(request):
     precio_max = request.GET.get('precio_max')
     capacidad = request.GET.get('capacidad')
     disponibles = request.GET.get('disponibles') #checkbox ON o none
-   
+    zona = request.GET.get('zona')
     moneda = request.GET.get('moneda')
     fecha_desde = request.GET.get('fecha_desde')
     fecha_hasta = request.GET.get('fecha_hasta')
@@ -41,7 +41,8 @@ def salones_view(request):
     if disponibles == 'on':
         salones_list = salones_list.filter(disponible=True)
 
-
+    if zona:
+        salones_list = salones_list.filter(zona=zona)
     if fecha_desde:
         salones_list = salones_list.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))
     if fecha_hasta:

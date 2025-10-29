@@ -3,6 +3,36 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 
 # Create your models here.
+BARRIOS = [
+     ("Centro", "Centro"),
+    ("Macrocentro", "Macrocentro"),
+    ("Echesortu", "Echesortu"),
+    ("Abasto", "Abasto"),
+    ("Tablada", "Tablada"),
+    ("Las Delicias", "Las Delicias"),
+    ("Fisherton", "Fisherton"),
+    ("Arroyito", "Arroyito"),
+    ("Pichincha", "Pichincha"),
+    ("Zona Norte", "Norte"),
+    ("Zona Oeste", "Oeste"),
+    ("Zona Este", "Este"),
+    ("Zona Sur", "Sur"),
+    ("Zona Suroeste", "Suroeste"),
+    ("Zona Sudeste", "Sudeste"),
+    ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
+    ("Granadero Baigorria", "Granadero Baigorria"),
+    ("Ricardone", "Ricardone"),
+    ("San Lorenzo", "San Lorenzo"),
+    ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Funes", "Funes"),
+    ("Roldan", "Roldán"),
+    ("Soldini", "Soldini"),
+    ("Perez", "Pérez"),
+    ("Otro", "Otro")
+
+]
+
+
 class Oficina(models.Model):
     MONEDAS = [
     ('ARS', 'Pesos Argentinos (ARS)'),
@@ -19,6 +49,7 @@ class Oficina(models.Model):
     disponible = models.BooleanField(default=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     aprobado = models.BooleanField(default=False)
+    zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
 
     propietario = models.ForeignKey(
         settings.AUTH_USER_MODEL,

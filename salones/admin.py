@@ -10,7 +10,8 @@ class ImagenSalonInline(admin.TabularInline):   # o admin.StackedInline
 # Admin personalizado para Salones
 @admin.register(salones)
 class SalonesAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'direccion', 'capacidad', 'precio', 'aprobado')
+    list_display = ('nombre', 'direccion', 'capacidad', 'precio', 'aprobado', 'disponible')
+    list_editable = ('aprobado', 'disponible')
     inlines = [ImagenSalonInline]
 
 # Ya no registramos ImagenSalon por separado

@@ -26,7 +26,7 @@ def alquileres(request):
     precio_max = request.GET.get('precio_max')
     ambientes = request.GET.get('ambientes')
     disponibles = request.GET.get('disponibles') #checkbox ON o none
-   
+    zona = request.GET.get('zona')
     moneda = request.GET.get('moneda')
     fecha_desde = request.GET.get('fecha_desde')
     fecha_hasta = request.GET.get('fecha_hasta')
@@ -43,6 +43,8 @@ def alquileres(request):
     if disponibles == 'on':
         oficinas = oficinas.filter(disponible=True)
 
+    if zona:
+        oficinas = oficinas.filter(zona=zona)
 
     if fecha_desde:
         oficinas = oficinas.filter(fecha_publicacion__date__gte=parse_date(fecha_desde))

@@ -7,32 +7,31 @@ from geopy.geocoders import Nominatim
 
 
 BARRIOS = [
-     ("centro", "Centro"),
-    ("macrocentro", "Macrocentro"),
-    ("echesortu", "Echesortu"),
-    ("abasto", "Abasto"),
-    ("tablada", "Tablada"),
-    ("las_delicias", "Las Delicias"),
-    ("fisherton", "Fisherton"),
-    ("arroyito", "Arroyito"),
-    ("aladelta", "Alto Rosario"),
-    ("pichincha", "Pichincha"),
-    ("zona_norte", "Zona Norte"),
-    ("zona_oeste", "Zona Oeste"),
-    ("zona_este", "Zona Este"),
-    ("zona_sur", "Zona Sur"),
-    ("zona_suroeste", "Zona Suroeste"),
-    ("zona_sudeste", "Zona Sudeste"),
-    ("villa_gobernador_galvez", "Villa Gobernador Gálvez"),
-    ("granadero_baigorria", "Granadero Baigorria"),
-    ("ricardone", "Ricardone"),
-    ("san_lorenzo", "San Lorenzo"),
-    ("fray_luis_beltran", "Fray Luis Beltrán"),
-    ("funes", "Funes"),
-    ("roldan", "Roldán"),
-    ("soldini", "Soldini"),
-    ("perez", "Pérez"),
-    ("other", "Otro")
+     ("Centro", "Centro"),
+    ("Macrocentro", "Macrocentro"),
+    ("Echesortu", "Echesortu"),
+    ("Abasto", "Abasto"),
+    ("Tablada", "Tablada"),
+    ("Las Delicias", "Las Delicias"),
+    ("Fisherton", "Fisherton"),
+    ("Arroyito", "Arroyito"),
+    ("Pichincha", "Pichincha"),
+    ("Zona Norte", "Norte"),
+    ("Zona Oeste", "Oeste"),
+    ("Zona Este", "Este"),
+    ("Zona Sur", "Sur"),
+    ("Zona Suroeste", "Suroeste"),
+    ("Zona Sudeste", "Sudeste"),
+    ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
+    ("Granadero Baigorria", "Granadero Baigorria"),
+    ("Ricardone", "Ricardone"),
+    ("San Lorenzo", "San Lorenzo"),
+    ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Funes", "Funes"),
+    ("Roldan", "Roldán"),
+    ("Soldini", "Soldini"),
+    ("Perez", "Pérez"),
+    ("Otro", "Otro")
 
 ]
 
@@ -45,8 +44,6 @@ class Departamentos(models.Model):
     ]
     nombre = models.CharField(null=True, blank=True,max_length=100, validators=[], error_messages={"blank": "El nombre no puede estar vacío", 'null': 'El nombre no puede ser nulo'})
     direccion = models.CharField(max_length=100)
-    latitud = models.FloatField(blank=True, null=True)
-    longitud = models.FloatField(blank=True, null=True)
     piso = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0, message="Seleccione un piso correcto") ,MaxValueValidator(20, message="Seleccione un piso correcto")])
     departamento = models.CharField(max_length=2,null=True, blank=True)
     precio = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999999999)])
@@ -59,6 +56,7 @@ class Departamentos(models.Model):
     disponibilidad = models.BooleanField(default=True)
     aprobado = models.BooleanField(default=False)
     zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
+    
 
    
 

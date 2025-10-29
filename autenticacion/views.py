@@ -7,7 +7,11 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from usuarios.models import Favorito
 from django.core.paginator import Paginator
-
+from departamentos.models import Departamentos
+from oficinas.models import Oficina
+from salones.models import salones
+from django.core.paginator import Paginator
+from itertools import chain
 
 class VRegistro(View):
     def get(self, request):
@@ -40,9 +44,44 @@ class VLogin(View):
           
 
 
-def cuenta(request):
-  return render(request, 'cuenta.html', {'user': request.user})
 
+
+
+def cuenta(request):
+    if request.method == 'POST' and 'avatar' in request.FILES:
+        request.user.avatar = request.FILES['avatar']
+        request.user.save()
+        return redirect('cuenta')
+
+    if 'eliminaravatar' in request.POST:
+        request.user.avatar = 'avatars/default_avatar.png'
+        request.user.save()
+        return redirect('cuenta')
+       
+    departamentos = Departamentos.objects.filter(propietario=request.user)
+    oficinas = Oficina.objects.filter(propietario=request.user)
+    salon = salones.objects.filter(propietario=request.user)
+
+
+    # Paginadores separados
+    paginator_departamentos = Paginator(departamentos, 5)
+    paginator_oficinas = Paginator(oficinas, 5)
+    paginator_salones = Paginator(salon, 5)
+
+    page_number_d = request.GET.get('page_d')
+    page_number_o = request.GET.get('page_o')
+    page_number_s = request.GET.get('page_s')
+
+    page_obj_d = paginator_departamentos.get_page(page_number_d)
+    page_obj_o = paginator_oficinas.get_page(page_number_o)
+    page_obj_s = paginator_salones.get_page(page_number_s)
+
+    return render(request, 'cuenta.html', {
+        'user': request.user,
+        'page_obj_d': page_obj_d,
+        'page_obj_o': page_obj_o,
+        'page_obj_s': page_obj_s
+    })
 @login_required
 def eliminar_cuenta(request):
     if request.method == 'POST':

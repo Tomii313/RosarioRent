@@ -28,7 +28,7 @@ class UsuarioPersonalizado(AbstractUser):
     direccion = models.CharField(max_length=150)
     num_calle = models.IntegerField(validators=[MinValueValidator(0, message="El número no puede ser menor a 0."), MaxValueValidator(10000, message="El número no puede ser mayor a 10.000")])
     nacimiento = models.DateField()
-    
+    avatar = models.ImageField(upload_to="avatars/", default="avatars/default_avatar.png", blank=True, null=True)
     email = models.EmailField(unique=True)
     tipo = models.CharField(max_length=20, choices=TIPO_USUARIO, default='inquilino')
     #tipo_publicacion = models.CharField(max_length=20, choices=TIPO_PUBLICACION, blank=True, null=True)
@@ -57,7 +57,7 @@ class Comentario(models.Model):
 
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="respuestas")
     def __str__(self):
-        return f"{self.usuario.username} - {self.publicacion} {self.estrellas}"
+        return f"{self.usuario.nombre} - {self.publicacion} {self.estrellas}"
 
 
 class Favorito(models.Model):

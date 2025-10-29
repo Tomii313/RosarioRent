@@ -6,4 +6,5 @@ urlpatterns = [
     path("baneado/", views.baneado, name="baneado"),
     path('editarcomentario/<int:id>', views.editar_comentario, name="editarcomentario"),
     path('eliminarcomentario/<int:id>', views.eliminar_comentario, name="eliminarcomentario"),
+  
 ]

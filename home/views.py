@@ -10,6 +10,9 @@ def home_view(request):
     mensajeinicial = "Hola 👋<br>Seleccioná una opción:<br>1. Acerca de Publicar<br>2. Acerca de Alquilar<br>3. Soporte"
     return render(request,"home.html", {"mensajeinicial": mensajeinicial})
 
+    
+def terminos(request):
+    return render(request, "terminos.html")
 
 def contacto(request):
     if request.method == "POST":
@@ -86,4 +89,6 @@ def chatbot(request):
 
         return JsonResponse({'response': response})
 
-    
+def error_404(request):
+    return render(request, '404.html', status=404)
+        

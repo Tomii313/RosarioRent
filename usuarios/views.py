@@ -121,5 +121,3 @@ def eliminar_comentario(request,id):
 
 
     
-#def terminos():
-    
