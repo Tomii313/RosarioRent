@@ -1,7 +1,10 @@
 from django import forms
-from .models import Oficina
+from .models import Oficina, BARRIOS
 
 class FormularioOficinas(forms.ModelForm):
+    zona = forms.ChoiceField(
+    choices=[('', '-- 🏠 Seleccione una opción --')] + BARRIOS,
+    widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Oficina
         exclude = ['propietario', 'fecha_publicacion', 'imagen']

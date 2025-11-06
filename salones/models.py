@@ -1,19 +1,38 @@
 from django.db import models
 from django.conf import settings
+from geopy.geocoders import Nominatim
 
 # Create your models here.
 
 
 BARRIOS = [
-     ("Centro", "Centro"),
+    ("Centro", "Centro"),
     ("Macrocentro", "Macrocentro"),
     ("Echesortu", "Echesortu"),
     ("Abasto", "Abasto"),
     ("Tablada", "Tablada"),
+    ("Martin", "Martin"),
     ("Las Delicias", "Las Delicias"),
     ("Fisherton", "Fisherton"),
     ("Arroyito", "Arroyito"),
     ("Pichincha", "Pichincha"),
+    ("Luis Agote", "Luis Agote"),
+    ("Alberdi", "Alberdi"),
+    ("Empalme Graneros", "Empalme Graneros"),
+    ("Ludueña", "Ludueña"),
+    ("Belgrano", "Belgrano"),
+    ("Azcuénaga", "Azcuénaga"),
+    ("Refinería", "Refinería"),
+    ("Hospitales", "Hospitales"),
+    ("La Florida", "La Florida"),
+    ("Sarmiento", "Sarmiento"),
+    ("Hostal del Sol", "Hostal del Sol"),
+    ("Barrio Rucci", "Barrio Rucci"),
+    ("Godoy", "Godoy"),
+    ("7 de Septiembre", "7 de Septiembre"),
+    ("Lisandro de la Torre", "Lisandro de la Torre"),
+    ("Antártida Argentina", "Antártida Argentina"),
+    ("Lomas de Alberdi", "Lomas de Alberdi"),
     ("Zona Norte", "Norte"),
     ("Zona Oeste", "Oeste"),
     ("Zona Este", "Este"),
@@ -22,15 +41,15 @@ BARRIOS = [
     ("Zona Sudeste", "Sudeste"),
     ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
     ("Granadero Baigorria", "Granadero Baigorria"),
-    ("Ricardone", "Ricardone"),
     ("San Lorenzo", "San Lorenzo"),
     ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Ricardone", "Ricardone"),
     ("Funes", "Funes"),
     ("Roldán", "Roldán"),
     ("Soldini", "Soldini"),
-    ("Pérez", "Pérez"),
-    ("Otro", "Otro")
-
+    ("Perez", "Pérez"),
+    ("Puente Gallego", "Puente Gallego"),
+    
 ]
 
 class salones(models.Model):
@@ -49,6 +68,8 @@ class salones(models.Model):
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     aprobado = models.BooleanField(default=False)
     imagen = models.ImageField(upload_to="salones/", blank=True, null=True)
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
   
     propietario = models.ForeignKey(
         settings.AUTH_USER_MODEL,

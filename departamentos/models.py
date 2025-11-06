@@ -7,15 +7,33 @@ from geopy.geocoders import Nominatim
 
 
 BARRIOS = [
-     ("Centro", "Centro"),
+    ("Centro", "Centro"),
     ("Macrocentro", "Macrocentro"),
     ("Echesortu", "Echesortu"),
     ("Abasto", "Abasto"),
     ("Tablada", "Tablada"),
+    ("Martin", "Martin"),
     ("Las Delicias", "Las Delicias"),
     ("Fisherton", "Fisherton"),
     ("Arroyito", "Arroyito"),
     ("Pichincha", "Pichincha"),
+    ("Luis Agote", "Luis Agote"),
+    ("Alberdi", "Alberdi"),
+    ("Empalme Graneros", "Empalme Graneros"),
+    ("Ludueña", "Ludueña"),
+    ("Belgrano", "Belgrano"),
+    ("Azcuénaga", "Azcuénaga"),
+    ("Refinería", "Refinería"),
+    ("Hospitales", "Hospitales"),
+    ("La Florida", "La Florida"),
+    ("Sarmiento", "Sarmiento"),
+    ("Hostal del Sol", "Hostal del Sol"),
+    ("Barrio Rucci", "Barrio Rucci"),
+    ("Godoy", "Godoy"),
+    ("7 de Septiembre", "7 de Septiembre"),
+    ("Lisandro de la Torre", "Lisandro de la Torre"),
+    ("Antártida Argentina", "Antártida Argentina"),
+    ("Lomas de Alberdi", "Lomas de Alberdi"),
     ("Zona Norte", "Norte"),
     ("Zona Oeste", "Oeste"),
     ("Zona Este", "Este"),
@@ -24,17 +42,16 @@ BARRIOS = [
     ("Zona Sudeste", "Sudeste"),
     ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
     ("Granadero Baigorria", "Granadero Baigorria"),
-    ("Ricardone", "Ricardone"),
     ("San Lorenzo", "San Lorenzo"),
     ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Ricardone", "Ricardone"),
     ("Funes", "Funes"),
-    ("Roldan", "Roldán"),
+    ("Roldán", "Roldán"),
     ("Soldini", "Soldini"),
     ("Perez", "Pérez"),
-    ("Otro", "Otro")
-
+    ("Puente Gallego", "Puente Gallego"),
+    ("Otro", "Otro"),
 ]
-
 
 
 class Departamentos(models.Model):
@@ -49,6 +66,8 @@ class Departamentos(models.Model):
     precio = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999999999)])
     monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
     descripcion = models.TextField()
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
     imagen = models.ImageField(upload_to="departamentos/", blank=True, null=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     habitaciones = models.IntegerField(validators=[MinValueValidator(0, message='Inserte un valor valido'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])

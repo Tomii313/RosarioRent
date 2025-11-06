@@ -1,18 +1,37 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
+from geopy.geocoders import Nominatim
 
 # Create your models here.
 BARRIOS = [
-     ("Centro", "Centro"),
+    ("Centro", "Centro"),
     ("Macrocentro", "Macrocentro"),
     ("Echesortu", "Echesortu"),
     ("Abasto", "Abasto"),
     ("Tablada", "Tablada"),
+    ("Martin", "Martin"),
     ("Las Delicias", "Las Delicias"),
     ("Fisherton", "Fisherton"),
     ("Arroyito", "Arroyito"),
     ("Pichincha", "Pichincha"),
+    ("Luis Agote", "Luis Agote"),
+    ("Alberdi", "Alberdi"),
+    ("Empalme Graneros", "Empalme Graneros"),
+    ("Ludueña", "Ludueña"),
+    ("Belgrano", "Belgrano"),
+    ("Azcuénaga", "Azcuénaga"),
+    ("Refinería", "Refinería"),
+    ("Hospitales", "Hospitales"),
+    ("La Florida", "La Florida"),
+    ("Sarmiento", "Sarmiento"),
+    ("Hostal del Sol", "Hostal del Sol"),
+    ("Barrio Rucci", "Barrio Rucci"),
+    ("Godoy", "Godoy"),
+    ("7 de Septiembre", "7 de Septiembre"),
+    ("Lisandro de la Torre", "Lisandro de la Torre"),
+    ("Antártida Argentina", "Antártida Argentina"),
+    ("Lomas de Alberdi", "Lomas de Alberdi"),
     ("Zona Norte", "Norte"),
     ("Zona Oeste", "Oeste"),
     ("Zona Este", "Este"),
@@ -21,15 +40,15 @@ BARRIOS = [
     ("Zona Sudeste", "Sudeste"),
     ("Villa Gobernador Gálvez", "Villa Gobernador Gálvez"),
     ("Granadero Baigorria", "Granadero Baigorria"),
-    ("Ricardone", "Ricardone"),
     ("San Lorenzo", "San Lorenzo"),
     ("Fray Luis Beltrán", "Fray Luis Beltrán"),
+    ("Ricardone", "Ricardone"),
     ("Funes", "Funes"),
-    ("Roldan", "Roldán"),
+    ("Roldán", "Roldán"),
     ("Soldini", "Soldini"),
     ("Perez", "Pérez"),
-    ("Otro", "Otro")
-
+    ("Puente Gallego", "Puente Gallego"),
+    ("Otro", "Otro"),
 ]
 
 
@@ -42,6 +61,8 @@ class Oficina(models.Model):
     direccion = models.CharField(max_length=200)
     ambientes = models.IntegerField(validators=[MinValueValidator(1, message="Debe tener al menos 1 ambiente"), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     piso = models.IntegerField(null=True, blank=True)
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
     departamento = models.CharField(max_length=2,null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True)
     monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
