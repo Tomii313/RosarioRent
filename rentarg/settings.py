@@ -177,8 +177,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Render usa esta carpeta para servir archivos
+STATIC_URL = '/static/'
+
+if os.getenv('RENDER'):  # Si está corriendo en Render (producción)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+    STATICFILES_DIRS = []
+else:  # Si está corriendo en tu compu local
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, '../rentarg-front/static'),
+    ]
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -186,9 +195,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [
+""" STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../rentarg-front/static'),
-]
+] """
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
