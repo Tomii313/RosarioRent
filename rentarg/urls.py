@@ -32,3 +32,8 @@ urlpatterns = [
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #handler404 = 'home.views.error_404'
+
+if not settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]
