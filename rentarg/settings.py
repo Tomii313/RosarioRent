@@ -26,7 +26,16 @@ SECRET_KEY = 'django-insecure-xptpwuef388i_f@vm9%fkyisyk%0=(9d_be1(rcd$p8os6-v_-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rosariorent.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'rosariorent.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
+
+# 👇 Esto es importante para Render
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
