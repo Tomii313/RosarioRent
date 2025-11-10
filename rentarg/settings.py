@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-xptpwuef388i_f@vm9%fkyisyk%0=(9d_be1(rcd$p8os6-v_-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rosariorent.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -108,7 +108,7 @@ WSGI_APPLICATION = 'rentarg.wsgi.application'
         },
 
 }} """
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('MYSQL_DATABASE', 'rosariorent'),
@@ -122,7 +122,14 @@ DATABASES = {
         },
     }
 }
-
+ """
+DATABASES = {
+    'default': dj_database_url.config(
+        default="postgresql://rosariorent_db_user:OqvHrvZ6cQ3d19VIQr6zd9IqDZLvYuH1@dpg-d490muu3jp1c73cr1fn0-a.oregon-postgres.render.com/rosariorent_db",
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
