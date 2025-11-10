@@ -32,10 +32,13 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-# 👇 Esto es importante para Render
+# Render agrega automáticamente una variable con el dominio real del servicio
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+else:
+    # Esto fuerza a aceptar cualquier host si por algún motivo Render no pasa la variable
+    ALLOWED_HOSTS.append('*')
 
 
 # Application definition
