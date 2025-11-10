@@ -177,16 +177,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-if os.getenv('RENDER'):  # Si está corriendo en Render (producción)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-    STATICFILES_DIRS = []
-else:  # Si está corriendo en tu compu local
+# En Render (producción)
+if os.environ.get('RENDER'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = []
+# En tu PC (desarrollo)
+else:
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, '../rentarg-front/static'),
     ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
