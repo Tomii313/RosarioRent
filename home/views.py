@@ -89,6 +89,6 @@ def chatbot(request):
 
         return JsonResponse({'response': response})
 
-def error_404(request):
+def error_404(request, exception):
     return render(request, '404.html', status=404)
         

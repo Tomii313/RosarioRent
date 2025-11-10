@@ -12,6 +12,10 @@ from oficinas.models import Oficina
 from salones.models import salones
 from django.core.paginator import Paginator
 from itertools import chain
+from allauth.socialaccount.signals import social_account_added
+from django.dispatch import receiver
+from allauth.account.signals import user_signed_up
+
 
 class VRegistro(View):
     def get(self, request):
@@ -97,3 +101,37 @@ def favoritos(request):
     page_number = request.GET.get('page')
     favoritos = paginator.get_page(page_number)
     return render(request, "favoritos.html", {"favoritos":favoritos})
+
+
+@receiver(social_account_added)
+def completar_datos_social(sender, request, sociallogin, **kwargs):
+    user = sociallogin.user
+
+    #Nombre desde Gugul
+    if not user.first_name and 'first_name' in sociallogin.account.extra_data:
+        user.first_name = sociallogin.account.extra_data.get('given_name', '')
+
+    if not user.last_name and 'family_name' in sociallogin.account.extra_data:
+        user.last_name = sociallogin.account.extra_data.get('family_name', '')
+
+    #Email
+
+    if not user.email and 'email' in sociallogin.account.extra_data:
+        user.email = sociallogin.account.extra_data.get('email')
+
+    if not user.username:
+        user.username = user.first_name or user.email.split('@')[0]
+
+    if not user.nombre:
+        user.nombre = user.first_name or 'Anónimo'
+
+    user.save()
+
+
+@receiver(user_signed_up)
+def completar_datos_google(request, user, **kwargs):
+    if not user.nombre:
+        user.nombre = user.first_name or "Anónimo"
+    if not user.apellido:
+        user.apellido = user.last_name or ""
+    user.save()

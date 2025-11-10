@@ -13,7 +13,9 @@ class FormularioRegistro(UserCreationForm):
         label= "Correo",
         widget=forms.EmailInput(attrs={
             "class": "form-control",
+            'required':True,
             "placeholder": "Ingresa tu correo electrónico"
+
         })
     )
     
@@ -21,21 +23,27 @@ class FormularioRegistro(UserCreationForm):
     label="Usuario",
     widget=forms.TextInput(attrs={
         "class":"form-control",
+        'required':True,
         "placeholder":"Ingresa tu nombre de usuario"
+        
     })
     )
 
     nombre = forms.CharField(
         label="Nombres", widget=forms.TextInput(attrs={
             "class": "form-control",
+            'required':True,
             "placeholder": "Ingresa tu/s nombre/s"
+
         })
     )
     
     apellido = forms.CharField(
         label="Apellido", widget=forms.TextInput(attrs={
             "class": "form-control",
-            "placeholder": "Ingresa tu/s apellido/s"
+            "placeholder": "Ingresa tu/s apellido/s",
+            'required':True,
+
         })
     )
     
@@ -44,6 +52,8 @@ class FormularioRegistro(UserCreationForm):
             "class": "form-control",
             "placeholder": "DNI",
             "min":"0", "maxlength":"8",
+            'required':True,
+
             "oninput:": "if(this.value.length > 8) this.value=this.value.slice(0,5);"
         })
     )
@@ -51,14 +61,18 @@ class FormularioRegistro(UserCreationForm):
     telefono = forms.CharField(
         label="Telefono", widget=forms.TextInput(attrs={
             "class": "form-control",
+            'required':True,
             "placeholder": "Ingresa tu teléfono"
+
         })
     )
     
     direccion = forms.CharField(
         label="Dirección", widget=forms.TextInput(attrs={
             "class": "form-control",
+            'required':True,
             "placeholder": "Ingresa tu dirección"
+
         })
     )
     
@@ -67,6 +81,7 @@ class FormularioRegistro(UserCreationForm):
             "class": "form-control",
             "placeholder": "NRO",
             "min": "0", "max":"10000","maxlength":"5",
+            'required':True,
             "oninput": "if(this.value.length > 5) this.value = this.value.slice(0,5);"
 
         })
@@ -76,7 +91,9 @@ class FormularioRegistro(UserCreationForm):
             "class": "form-control",
             "placeholder": "Ingresa tu fecha de nacimiento",
             "type":"date",
+            'required':True,
             "max": "2010-12-31"
+
         })
     )
     
@@ -86,13 +103,15 @@ class FormularioRegistro(UserCreationForm):
     widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Ingresá tu contraseña'
+
         })
     )
     password2 = forms.CharField(
         label="Confirmar contraseña",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Confirma tu contraseña'
+            'placeholder': 'Confirma tu contraseña',
+            'required':True
         })
     )
 
@@ -101,6 +120,7 @@ class FormularioRegistro(UserCreationForm):
         choices=UsuarioPersonalizado.TIPO_USUARIO,
         widget=forms.Select(attrs={
             "class": "form-control"})
+
         )
     
     tipo_publicacion = MultiSelectFormField(

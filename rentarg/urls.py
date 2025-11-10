@@ -28,5 +28,7 @@ urlpatterns = [
     path("autenticacion/", include("autenticacion.urls")),
     path('oficinas/', include('oficinas.urls')),
     path('usuarios/', include('usuarios.urls')),
-   
+    path('accounts/', include('allauth.urls')),   
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#handler404 = 'home.views.error_404'

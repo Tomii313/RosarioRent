@@ -38,12 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     "home",
     "departamentos",
     "salones",
-    "autenticacion",
+    #"autenticacion",
     "usuarios",
     "oficinas",
+    'autenticacion.apps.AutenticacionConfig',
 
 ]
 
@@ -56,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'usuarios.middleware.CheckBanMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'rentarg.urls'
@@ -158,3 +166,16 @@ EMAIL_HOST_USER = 'tomidiazmoreno@gmail.com'
 EMAIL_HOST_PASSWORD = "rxpo nltb cset lklg"
 AUTH_USER_MODEL = 'usuarios.UsuarioPersonalizado'
 
+SITE_ID = 1
+
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+ACCOUNT_SIGNUP_FORM_CLASS = None
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+ACCOUNT_MESSAGES = False  # Esto hace que no muestre "Ha iniciado sesión exitosamente..."
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
