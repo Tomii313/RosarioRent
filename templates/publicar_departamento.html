@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{% block content %}
+<div class="form-container">
+    <!-- Logo arriba a la izquierda -->
+    <div class="w-100 d-flex justify-content-start mb-4">
+        <a class="navbar-brand fw-bold fs-3 d-flex align-items-center" href="{% url 'home' %}">
+            <i class="fa-solid fa-building-circle-check me-2" style="color:#ff6b6b;"></i>
+            RosarioRent
+        </a>
+        
+    </div>
+
+    <h2 class="form-title">Publicar nuevo departamento</h2>
+
+    {% if form.errors %}
+        <div class="errorlist mb-3">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="form-box">
+        {% csrf_token %}
+        <div class="form-fields">
+            <div class="row">
+            <!--<div class="col-md-6">
+                <label class="form-label">Titulo del Departamento</label>
+                {{ form.nombre}}
+            </div> -->
+            <div class="col-md-6">
+                 <label class="form-label">Dirección</label>
+                {{ form.direccion }}
+            </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                <label class="form-label">Precio</label>
+                {{ form.precio }}
+                
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Moneda</label>
+                {{ form.monedas }}
+            </div>
+            </div>
+            <div class="row mt-3">
+            <div class="col-md-3">
+                <label class="form-label">Habitaciones</label>
+                {{ form.habitaciones }}
+                </div>
+            <div class="col-md-3">
+            <label class="form-label">Baños</label>
+                {{ form.banos }}
+                </div>
+            <div class="col-md-3">
+                <label class="form-label">Piso</label>
+                {{ form.piso }}
+                </div>
+            <div class="col-md-3">
+                 <label class="form-label">Departamento</label>
+                {{ form.departamento }}
+            </div>
+                </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                     <label class="form-label">Zona</label>
+                {{ form.zona }}
+                </div>
+                <div class="col-md-6">
+                <label class="form-label">Fotos del departamento</label>
+                <input type="file" id="imagenesInput" name="imagenes" multiple class="form-control">
+                    </div>
+                    </div>
+        
+            
+            <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                {{ form.descripcion }}
+            </div>
+
+               <!-- Bloque de Términos -->
+        <div class="terminos-box mb-4">
+            <h5 class="text-warning">Términos y Condiciones de Publicación</h5>
+            <div class="terminos-text">
+                <p>
+                    Al publicar un anuncio en <strong>RosarioRent</strong>, usted acepta que la información 
+                    proporcionada es veraz y corresponde al inmueble que se detalla. 
+                </p>
+                <p>
+                    Está estrictamente prohibido publicar contenido falso, fraudulento o que 
+                    no corresponda a un alquiler real. En caso de detectar irregularidades, 
+                    <strong>su cuenta podrá ser suspendida de forma permanente</strong> sin previo aviso.
+                </p>
+                <p>
+                    Toda la información registrada (incluyendo su dirección IP, datos de contacto 
+                    y actividad en la plataforma) podrá ser utilizada como prueba ante autoridades 
+                    competentes en caso de fraude, estafa o cualquier otra actividad ilícita.
+                </p>
+                <p>
+                    Al aceptar estos términos, usted reconoce que puede ser legalmente 
+                    responsable por la información publicada. Cualquier intento de engaño 
+                    o fraude podrá derivar en denuncias formales y posibles consecuencias penales.
+                </p>
+                <p>
+                    <strong>RosarioRent</strong> se reserva el derecho de eliminar publicaciones 
+                    que incumplan estas condiciones y de iniciar acciones legales si corresponde.
+                </p>
+            </div>
+          <div class="form-check mt-3 d-flex align-items-center">
+    <div class="form-check mt-3 d-flex align-items-center">
+    <input type="checkbox" id="aceptoTerminos" name="aceptoTerminos" required class="me-2">
+    <br>
+    <label for="aceptoTerminos">Acepto los términos y condiciones</label>
+</div>
+</div>
+            <button type="submit" class="btn-submit">Publicar</button>
+        </div>
+    </form>
+</div>
+
+<style>
+body {
+    background: #1c1c1c;
+    color: #f0f0f0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.terminos-box {
+    background: #1c1c1c;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.terminos-text p {
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.terminos-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.terminos-box::-webkit-scrollbar-thumb {
+    background: #ffb800;
+    border-radius: 10px;
+}
+/* Contenedor centrado */
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Título */
+.form-title {
+    font-size: 2rem;
+    color: #ffb800;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Caja del formulario */
+.form-box {
+    background: #2a2a2a;
+    padding: 40px 30px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Inputs */
+.form-box input,
+.form-box select,
+.form-box textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #555;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    background: #1c1c1c;
+    color: #f0f0f0;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+    border-color: #ffb800;
+    box-shadow: 0 0 8px rgba(255,184,0,0.4);
+    outline: none;
+}
+
+/* Botón */
+.btn-submit {
+    width: 50%;
+    margin: 0 auto;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ffb800, #ffdb3c);
+    cursor: pointer;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,184,0,0.5);
+}
+
+/* Errores */
+.errorlist {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+</style>
+<script>
+let archivos = [];
+
+const input = document.getElementById('imagenesInput');
+const preview = document.getElementById('preview');
+
+input.addEventListener('change', (e) => {
+    for (let file of e.target.files) {
+        archivos.push(file);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '10px';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    }
+    // Limpiar input para permitir agregar más archivos después
+    input.value = '';
+});
+
+// Al enviar el formulario, reemplazamos el input original con los archivos acumulados
+const form = document.querySelector('form');
+form.addEventListener('submit', (e) => {
+    const dataTransfer = new DataTransfer();
+    archivos.forEach(f => dataTransfer.items.add(f));
+    input.files = dataTransfer.files;
+});
+</script>
+{% endblock %}

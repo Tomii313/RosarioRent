@@ -1,0 +1,504 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RosarioRent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/rent.ico' %}" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+      
+           .descripcion-box {
+    max-width: 100%;          /* que nunca exceda su columna */
+    word-wrap: break-word;    /* parte las palabras largas */
+    overflow-wrap: break-word;/* lo mismo para navegadores nuevos */
+    line-height: 1.5;
+    white-space: pre-line;    /* mantiene saltos de línea */
+}
+        
+
+        .fondoinformacion {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            color: #f1f1f1;
+        }
+
+        .carousel-item img {
+          height: 400px !important; /* altura fija */
+            max-width: 600px;   /* opcional: ancho máximo */
+            width: 100% !important;
+            object-fit: cover;   /* mantiene proporción sin deformar */
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin: 0 auto;      /* centra la imagen */
+            display: block !important;
+        }
+
+    .info-box {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 10px 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 1.05rem;
+    color: #f1f1f1;
+    transition: 0.3s;
+}
+
+.info-box:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.info-box i {
+    color: #ff6b6b;
+    font-size: 1.2rem;
+}
+
+.info-box.precio {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.favorito-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+
+.favorito-label input {
+    transform: scale(1.2);
+}
+        .btn-contactar {
+            background: linear-gradient(135deg, #ff6b6b, #f94d6a);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 15px rgba(249, 77, 106, 0.4);
+            transition: 0.3s ease;
+        }
+
+        .btn-contactar:hover {
+            background: linear-gradient(135deg, #f94d6a, #ff6b6b);
+            box-shadow: 0 6px 20px rgba(249, 77, 106, 0.6);
+            transform: translateY(-2px);
+        }
+        .textarea{
+            width:100%;
+            min-height: 100px;
+            resize: vertical;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        
+       @media (min-width: 992px) {
+    #mainNav .navbar-brand {
+        font-size: 1.5em;
+        transition: font-size 0.3s 
+ease-in-out;
+    }
+}
+#mainNav .navbar-brand {
+    color: #ffc800;
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 700;
+    letter-spacing: 0.0625em;
+    text-transform: uppercase;
+}
+.navbar-brand {
+    padding-top: var(--bs-navbar-brand-padding-y);
+    padding-bottom: var(--bs-navbar-brand-padding-y);
+    margin-right
+}
+.whatsapp-btn {
+    background: linear-gradient(135deg, #25D366, #1EBE57);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-btn:hover {
+    background: linear-gradient(135deg, #1EBE57, #25D366);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+    transform: translateY(-2px);
+}
+/* Dale más espacio al carrusel en pantallas grandes */
+@media (min-width: 992px) {
+  /* Columna de la izquierda (carrusel) */
+  .carrusel-col {
+      flex: 0 0 55%;      /* ocupa 55% del ancho */
+      max-width: 55%;
+  }
+
+  /* Columna de la derecha (info) */
+  .info-col {
+      flex: 0 0 45%;
+      max-width: 45%;
+  }
+}
+input[type="checkbox"] {
+ 
+    cursor: pointer;
+    background-color: #fff;
+    transition: background-color 0.3s ease-in-out;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    width: 24px;
+    height: 24px;
+    appearance: none;
+    border: 2px solid #888;
+   
+}
+
+
+input[type="checkbox"]:checked {
+  background-color: rgb(1, 247, 74);
+}
+input[type="checkbox"]:focus {
+  border-color: rgb(80, 67, 250);
+} 
+input[type="checkbox"]:disabled {
+  background-color: rgb(198, 198, 198);
+  background-image: none;
+} 
+input[type="checkbox"]:disabled:checked {
+  background-color: rgb(198, 198, 198);
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+} 
+.favorito-label{
+  font-size:20px;
+  padding-left:20px;
+}
+.favorito-label span{
+  margin-left:10px;
+}
+ #btneliminar{
+          width:200px;
+         
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+      <a class="navbar-brand fw-bold fs-3 d-flex align-items-center" href="{% url 'salones' %}">
+            <i class="fa-solid fa-building-circle-check me-2" style="color:#ff6b6b;"></i>
+            RosarioRent
+        </a>
+     </nav>
+<div class="fondoinformacion mt-5">
+    <div class="container mt-3">
+     
+       
+        
+    </div>
+     
+        <!-- FOTO + INFO -->
+        <div class="d-flex flex-column flex-lg-row gap-4 align-items-start">
+            <div class="flex-fill">
+                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                     <div class="carousel-inner">
+                         {% if salon.imagenes.all %}
+                            {% for imagen in salon.imagenes.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                              {% if imagen.imagen %} 
+                              <img src="{{ imagen.imagen.url }}" class="d-block w-100" alt="...">
+                            {%else%}
+                              <img src="{% static 'assets/default.jpg' %}" class="d-block w-100" alt="Imagen por defecto">
+                            {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% elif salon.imagen %}
+                            <div class="carousel-item active">
+                                <img src="{{ salon.imagen.url }}" class="d-block w-100" alt="Imagen principal">
+                            </div>
+                        {% else %}
+                            <div class="carousel-item active">
+                                <img src="{% static 'assets/default.jpg' %}" class="d-block w-100" alt="Imagen por defecto">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
+                <div class="descripcion-box info-box mb-3">
+   <p>{{ salon.descripcion }}</p>
+</div>
+            </div>
+
+            <div class="info-col">
+              
+             <div class="flex-fill">
+
+
+    <div class="info-box mb-3">
+        <i class="fa-solid fa-circle-user me-2"></i>
+        <span>{{ salon.propietario.nombre }}</span>
+    </div>
+    <div class="info-box mb-3">
+    <i class="fa-solid fa-calendar-days me-2"></i>
+    <span> {{salon.fecha_publicacion}}</span>
+    </div>
+    <div class="info-box mb-3 precio">
+        <i class="fa-solid fa-dollar-sign me-2"></i>
+        <span>Precio: ${{ salon.precio }} {{salon.monedas}}</span>
+    </div>
+
+    <div class="info-box mb-3">
+        <i class="fa-solid fa-location-dot me-2"></i>
+        <span>Dirección: {{ salon.direccion }}</span>
+    </div>
+     <div class="info-box mb-3">
+        <i class="fa-solid fa-city me-2"></i>
+        <span>Barrio: {{salon.zona }}</span>
+    </div>
+
+    <div class="info-box mb-3">
+        <i class="fa-solid fa-users me-2"></i>
+        <span>Capacidad: {{ salon.capacidad }} Personas</span>
+    </div>
+    
+
+
+   
+
+        
+    
+
+   
+</div>
+
+
+            <div class="d-flex align-items-center gap-3 mt-4">
+            {% if user.is_authenticated %}
+                <form action="{% url 'contactar_salon' salon.id %}" method="post" class="m-0 p-0">
+                    {% csrf_token %}
+                    <button class="btn-contactar">
+                        <i class="fa-regular fa-envelope"></i> Contactar
+                    </button>
+                </form>
+                 
+                   {% with msg="Hola, estoy interesado en tu propiedad de: "|add:salon.direccion %}
+<a class="btn-contactar whatsapp-btn"
+   href="https://wa.me/{{ salon.propietario.telefono|urlencode }}?text={{ msg|urlencode }}"
+   target="_blank">
+   <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
+</a> 
+{% endwith %}
+
+ {%else%}
+        <button class="btn-contactar" disabled>
+                        <i class="fa-regular fa-envelope"></i> Debe estar autenticado para contactarse
+                    </button>
+        {%endif%}
+                </div>
+           
+    
+               <br> <br>
+                 {% if user.is_authenticated %}
+                 <form method="POST">
+                    {%csrf_token%}
+          <label class="favorito-label">
+        <input type="checkbox" name="favorito" onchange="this.form.submit()"  {% if en_favoritos %}checked{% endif %}> <span>Agregar a Favoritos</span></input>
+        {%else%}
+       <input type="checkbox" name="favorito" disabled>Agregar a Favoritos</input>
+        {%endif%}
+        </form>
+            </div>
+        </div>
+  
+      <div class="mb-3">
+         {% if request.user == salon.propietario %}
+     <button type="button" class="btn btn-danger" id="btneliminar"><i class="fa-solid fa-trash"></i> Eliminar publicación</button>
+    
+    
+    <form id="deletepublicacion" method="post" action="{% url 'eliminar_salon' salon.id %}">
+        {%csrf_token%}
+   
+    </form>
+     {%endif%}
+     </div>
+         <div class="mb-3">
+           
+
+{% if lat and lon %}
+   
+
+    <div class="mb-3 text-center">
+        <iframe 
+            width="100%" 
+            height="400" 
+            style="border:0; border-radius:12px;"
+            loading="lazy"
+            allowfullscreen
+            src="https://www.openstreetmap.org/export/embed.html?bbox={{ lon_min }}%2C{{ lat_min }}%2C{{ lon_max }}%2C{{ lat_max }}&layer=mapnik&marker={{ lat }}%2C{{ lon }}">
+        </iframe>
+        <p class="mt-2">
+            <a href="https://www.openstreetmap.org/?mlat={{ lat }}&mlon={{ lon }}#map=16/{{ lat }}/{{ lon }}" 
+               target="_blank" 
+               class="btn btn-sm btn-outline-light">
+                <i class="fa-solid fa-map-location-dot"></i> Ver mapa más grande
+            </a>
+        </p>
+   
+{%elif salon.zona == "Otro"%}
+<P>No hay coordenadas disponibles para este salón.</P>
+
+
+{% else %}
+    <p>No hay coordenadas disponibles para este salón.</p>
+{% endif %}
+</div>
+  <div class="mt-5">
+           <hr class="my-4">
+<hr class="my-4">
+<h3>Comentarios</h3>
+
+{% for comentario in comentarios %}
+  {% if not comentario.parent %}
+    <!-- COMENTARIO PRINCIPAL -->
+    <div class="mb-3 p-2 rounded bg-dark bg-opacity-25">
+      <div class="d-flex align-items-center mb-2">
+        <img src="{% if comentario.usuario.avatar %}{{ comentario.usuario.avatar.url }}{% else %}{% static 'avatars/default_avatar.png' %}{% endif %}"
+             alt="Avatar"
+             class="rounded-circle me-2"
+             style="width:40px; height:40px; object-fit:cover;">
+        <strong>{{ comentario.usuario.nombre }} {{ comentario.usuario.apellido }}</strong>
+      </div>
+
+      <p class="mb-1">{{ comentario.texto }}</p>
+      <small class="text-muted">{{ comentario.creado|date:"d M Y H:i" }}</small>
+
+      {% if request.user == comentario.usuario %}
+        <a href="{% url 'editarcomentario' comentario.id %}" class="btn btn-sm btn-warning ms-3">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+        <form action="{% url 'eliminarcomentario' comentario.id %}" method="post" class="d-inline formcomentario">
+          {% csrf_token %}
+          <button type="button" class="btn btn-sm btn-danger btn-eliminar ms-1">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </form>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+        <button class="btn btn-sm btn-link text-primary ms-3"
+                onclick="document.getElementById('reply-{{comentario.id}}').classList.toggle('d-none')">
+          Responder
+        </button>
+
+        <!-- FORM DE RESPUESTA -->
+        <form id="reply-{{comentario.id}}" class="d-none mt-2" method="post">
+          {% csrf_token %}
+          <textarea name="texto" class="form-control" rows="2" required></textarea>
+          <input type="hidden" name="parent_id" value="{{comentario.id}}">
+          <button type="submit" class="btn btn-sm btn-primary mt-2">Enviar respuesta</button>
+        </form>
+      {% endif %}
+
+      <!-- RESPUESTAS -->
+      {% for respuesta in comentario.respuestas.all %}
+        <div class="mt-3 ms-5 p-2 rounded bg-secondary bg-opacity-25">
+          <div class="d-flex align-items-center mb-2">
+            <img src="{% if respuesta.usuario.avatar %}{{ respuesta.usuario.avatar.url }}{% else %}{% static 'avatars/default_avatar.png' %}{% endif %}"
+                 alt="Avatar"
+                 class="rounded-circle me-2"
+                 style="width:35px; height:35px; object-fit:cover;">
+            <strong>{{ respuesta.usuario.nombre }} {{ respuesta.usuario.apellido }}</strong>
+          </div>
+          <p class="mb-1">{{ respuesta.texto }}</p>
+          <small class="text-muted">{{ respuesta.creado|date:"d M Y H:i" }}</small>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% empty %}
+  <p class="text-light">No hay comentarios todavía. ¡Sé el primero!</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+  <div class="mt-4 mb-5">
+    <h4 class="text-light">Deja tu comentario:</h4>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.texto }}
+      <button type="submit" class="btn btn-primary mt-2">Comentar</button>
+    </form>
+  </div>
+{% else %}
+  <p class="text-light"><a href="{% url 'login' %}">Inicia sesión</a> para dejar un comentario</p>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+ document.querySelectorAll('.btn-eliminar').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        const form = btn.closest('.formcomentario'); // el form que contiene este botón
+        Swal.fire({
+            title: "Desea eliminar el comentario?",
+            text: "Esta decisión es irreversible!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, eliminar!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+  document.getElementById('btneliminar').addEventListener('click', function () {
+   Swal.fire({
+  title: "Estás seguro?",
+  text: "Esta decisión es irreversible!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Si, eliminar!"
+}).then((result) => {
+  if (result.isConfirmed) {
+    document.getElementById('deletepublicacion').submit();
+    }
+  });
+});
+
+
+
+</script>
+
+
+
+</body>
+</html>

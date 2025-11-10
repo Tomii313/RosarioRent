@@ -1,0 +1,497 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{% block title %}RosarioRent{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/rent.ico' %}" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body id="page-top">
+
+{% block content %}
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-lg" id="mainNav"
+     style="backdrop-filter: blur(12px); background: rgba(20, 30, 48, 0.95);">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold fs-3 d-flex align-items-center" href="{% url 'home' %}">
+      <i class="fa-solid fa-building-circle-check me-2" style="color:#ff6b6b;"></i>
+      RosarioRent
+    </a>
+
+    <!-- Botón hamburguesa -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars text-white"></i>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3 text-uppercase">
+        <li class="nav-item">
+          <a class="nav-link nav-link-fachero" href="{% url 'home' %}">Inicio</a>
+        </li>
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle nav-link-fachero" href="#" id="navbarDropdown"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Alquileres
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark border-0 shadow">
+            <li><a class="dropdown-item" href="{%url 'departamentos'%}">Departamentos</a></li>
+            <li><a class="dropdown-item" href="{%url 'oficinas'%}">Oficinas</a></li>
+            <li><a class="dropdown-item" href="{%url 'salones'%}">Salones</a></li>
+          </ul>
+        </li>
+          {% if user.is_authenticated %}
+               <div class="nav-user-dropdown" id="navUserDropdown">
+                <button id='navUserBtn' class="nav-user-btn" aria-haspopup="true" aria-expanded="false" type="button">
+                    <i class="fas fa-user"></i>
+                    </button>
+ <ul id="navUserMenu" class="nav-user-menu" role="menu" aria-labelledby="navUserBtn">
+    <li role="none"><a role="menuitem" href="{% url 'cuenta' %}">Cuenta</a></li>
+    <li role="none"><a role="menuitem" href="{% url 'favoritos' %}">Mis Favoritos</a></li>
+    <li role="none">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Cerrar sesión</button>
+      </form>
+    </li>
+  </ul>
+</div>
+{% if user.is_authenticated and user.tipo == 'propietario' and "oficina" in user.tipo_publicacion %}
+    
+        <a href="{% url 'publicar_oficina' %}" class="btn btn-success">Publicar nueva oficina</a>
+    
+{% endif %}
+{% else %}
+<li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a></li>
+{% endif %}
+</nav>
+
+<br><br><br>
+
+<!-- FILTROS -->
+<!-- Barra de filtros -->
+<div class="container mt-4 mb-4">
+  <div class="d-flex justify-content-between align-items-center p-3 filtro-bar shadow-sm rounded">
+    <h5 class="mb-0">Resultados Oficinas</h5>
+    <button class="btn btn-outline-dark d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtrosOficinas">
+      <i class="fas fa-sliders-h me-2"></i> Filtrar
+    </button>
+  </div>
+</div>
+
+<!-- Offcanvas filtros -->
+<div class="offcanvas offcanvas-end filtro-box" tabindex="-1" id="filtrosOficinas">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Filtrar opciones</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form method="get" class="row gy-3">
+      <div class="col-12">
+        <label class="form-label">Precio Máximo</label>
+        <input type="number" name="precio_max" class="form-control" placeholder="$1.000.000" oninput="if(this.value.length > 9) this.value=this.value.slice(0,9);">
+      </div>
+  <div class="col-6">
+        <label class="form-label">Moneda</label>
+        <select name="moneda" class="form-control" placeholder="ARS o USD">
+        <option value="">Todas</option>
+        <option value="ARS" name="ARS" class="form-control">ARS</option>
+        <option value="USD" name="USD" class="form-control">USD</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Ambientes</label>
+        <input type="number" name="ambientes" class="form-control" oninput="if(this.value.length > 2) this.value=this.value.slice(0,2)">
+      </div>
+
+ <div class="col-12">
+        <label class="form-label">Zona</label>
+      <select name="zona" class="form-control">
+    <option value="">Todas</option>
+    <option value="Centro">Centro</option>
+    <option value="Macrocentro">Macrocentro</option>
+    <option value="Echesortu">Echesortu</option>
+    <option value="Abasto">Abasto</option>
+    <option value="Martin">Martin</option>
+    <option value="Tablada">Tablada</option>
+    <option value="Las Delicias">Las Delicias</option>
+    <option value="Fisherton">Fisherton</option>
+    <option value="Arroyito">Arroyito</option>
+    <option value="Pichincha">Pichincha</option>
+    <option value="Norte">Zona Norte</option>
+    <option value="Sur">Zona Sur</option>
+    <option value="Oeste">Zona Oeste</option>
+    <option value="Este">Zona Este</option>
+    <option value="Suroeste">Zona Suroeste</option>
+    <option value="Sudeste">Zona Sudeste</option>
+    <option value="Villa Gobernador Gálvez">Villa Gobernador Gálvez</option>
+    <option value="Granadero Baigorria">Granadero Baigorria</option>
+    <option value="Ricardone">Ricardone</option>
+    <option value="San Lorenzo">San Lorenzo</option>
+    <option value="Fray Luis Beltrán">Fray Luis Beltrán</option>
+    <option value="Funes">Funes</option>
+    <option value="Roldán">Roldán</option>
+    <option value="Soldini">Soldini</option>
+    <option value="Pérez">Pérez</option>
+    <option value="Otro">Otro</option>
+</select>
+      </div>
+
+      <div class="col-6">
+  <label class="form-label">Publicado desde</label>
+  <input type="date" name="fecha_desde" class="form-control">
+</div>
+
+<div class="col-6">
+  <label class="form-label">Publicado hasta</label>
+  <input type="date" name="fecha_hasta" class="form-control">
+</div>
+      <div class="col-12">
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" name="disponibles" id="disponiblesCheck">
+          <label class="form-check-label" for="disponiblesCheck">
+            Solo disponibles
+          </label>
+        </div>
+      </div>
+
+      <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-dark w-100">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if messages %}
+<div class="alert alert-success" style="text-align:center">
+  {%for message in messages%}
+  {{message}}
+  {%endfor%}
+</div>
+{%endif%}
+<!-- Masthead -->
+<header class="masthead">
+    <div class="container">
+        <div class="masthead-heading text-uppercase">RosarioRent</div>
+        <div class="masthead-subheading">Todo para alquilar, en un solo lugar.</div>
+    </div>
+</header>
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        {% for oficina in oficinas %}
+        <div class="col-md-3 mb-4">
+            <div class="card" style="width: 18rem;">
+             <div id="carouselOficina{{ oficina.id }}" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% if oficina.imagenes.all %}
+            {% for imagen in oficina.imagenes.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              {% if imagen.imagen %}  
+              <img src="{{ imagen.imagen.url }}" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="Imagen de la oficina">
+            {%else%}
+              <img src="{% static 'assets/default.jpg' %}" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="Imagen por defecto">
+            {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="carousel-item active">
+                <img src="{% static 'assets/default.jpg' %}" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="Imagen por defecto">
+            </div>
+        {% endif %}
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselOficina{{ oficina.id }}" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselOficina{{ oficina.id }}" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+               <div class="card-body">
+          <h5 class="direccion">{{oficina.direccion}}</h5>
+          <div class="info-rapida">
+            <span class="habitaciones">
+          {{oficina.ambientes}} Ambientes
+          </span>
+           <span class="zona">Zona: {{ oficina.get_zona_display }}</span>
+           <p class="precio" style="padding-top: 20px;">
+    ${{ oficina.precio }} {{ oficina.monedas }}
+  </p>
+  </div>
+
+  <a href="{% url 'oficina_informacion' oficina.id %}" class="btn btn-primary btn-vermas">
+    Ver más
+  </a>
+</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center">
+
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Anterior</a>
+      </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente &raquo;</a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+{% endblock %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const dropdown = document.getElementById('navUserDropdown');
+  const btn = document.getElementById('navUserBtn');
+
+  if (!dropdown || !btn) return;
+
+  // toggle al click
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // clic afuera cierra
+  document.addEventListener('click', function () {
+    if (dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // ESC cierra
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+</script>
+</body>
+</html>
+
+<style>
+     .filtro-bar {
+    background: #fff;
+    border: 1px solid #ddd;
+  }
+  .btn-outline-dark {
+    border-radius: 50px;
+    padding: 6px 16px;
+  }
+     .card {
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width:310px;
+}
+
+.card img {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+.card:hover img {
+    transform: scale(1.08);
+}
+
+.card-body {
+    text-align: center;
+    padding: 1.2rem;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+}
+
+/* Botón más fachero */
+.card .btn {
+    border-radius: 50px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border: none;
+    background: linear-gradient(135deg, #ffd900, #f1c40f);
+    color: #2c2c2c; /* Texto oscuro para mejor contraste */
+    transition: all 0.3s ease;
+}
+
+.card .btn:hover {
+    background: linear-gradient(135deg, #f1c40f, #ffd900);
+    color: #000; /* Un poquito más oscuro al hover */
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 217, 0, 0.4);
+}
+
+    .filtro-box {
+        background-color: #f8f9fa;
+        border-radius: 1rem;
+        border: 1px solid #ddd;
+    }
+
+    .filtro-label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #444;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        box-shadow: none;
+        transition: border-color 0.2s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+    }
+
+    .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .nav-link-fachero {
+        position: relative;
+        color: #f1f1f1 !important;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .nav-link-fachero::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background-color: #ff6b6b;
+        transition: width 0.3s;
+    }
+
+    .nav-link-fachero:hover::after {
+        width: 100%;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(135deg, #ff6b6b, #f94d6a);
+        color: white;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(135deg, #f94d6a, #ff6b6b);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.5);
+    }
+      .btn-vermas {
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-vermas:hover {
+  background: linear-gradient(90deg, #0056b3, #004080);
+  transform: translateY(-2px);
+}
+.direccion{
+  font-size: 1.3rem;
+  font-weight:700;
+  color: #2c3e50; 
+    margin-bottom: 0.5rem;
+}
+.info-rapida {
+  display: flex;
+  gap: 1rem;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.info-rapida span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+.precio {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #27ae60;         /* verde agradable para precio */
+  margin-bottom: 1rem;
+}
+
+</style>

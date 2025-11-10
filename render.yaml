@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: rentarg
+    env: python
+    buildCommand: "./manage.py collectstatic --noinput"
+    startCommand: "gunicorn rentarg.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: rentarg.settings
+      - key: PYTHON_VERSION
+        value: 3.11
