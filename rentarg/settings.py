@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xptpwuef388i_f@vm9%fkyisyk%0=(9d_be1(rcd$p8os6-v_-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     'rosariorent.onrender.com',
     'localhost',
@@ -227,3 +230,9 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_MESSAGES = False  # Esto hace que no muestre "Ha iniciado sesión exitosamente..."
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+cloudinary.config(
+    cloud_name='dmf1dpxig',
+    api_key='578455854398419',
+    api_secret='zFlcTyRlld1pYH8Yjwj19EPn4Mc',
+)
