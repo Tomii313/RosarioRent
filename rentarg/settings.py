@@ -181,14 +181,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # Archivos estáticos (CSS, JS, imágenes)
+# Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-# En Render (producción)
-if os.environ.get('RENDER'):
+# Si estás en Render (producción)
+if os.environ.get('RENDER') or not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = []
-# En tu PC (desarrollo)
 else:
+    # Si estás desarrollando localmente
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, '../rentarg-front/static'),
     ]
@@ -230,6 +231,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_MESSAGES = False  # Esto hace que no muestre "Ha iniciado sesión exitosamente..."
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 cloudinary.config(
     cloud_name='dmf1dpxig',
