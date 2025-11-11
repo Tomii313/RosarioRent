@@ -18,6 +18,8 @@ import cloudinary.uploader
 import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from django.urls import path, include, re_path
+from django.views.static import serve
 
 
 # Quick-start development settings - unsuitable for production
@@ -184,12 +186,13 @@ USE_TZ = True
 # Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-# Si estamos en Render, usar la carpeta staticfiles (ya con tus archivos)
-if os.environ.get('RENDER'):
+# Detectar si estamos en Render
+IS_RENDER = os.environ.get('RENDER_EXTERNAL_HOSTNAME') is not None
+
+if IS_RENDER:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = []  # Render usa solo lo que ya está en staticfiles
+    STATICFILES_DIRS = []
 else:
-    # En local sí usás rentarg-front
     STATICFILES_DIRS = [os.path.join(BASE_DIR, '../rentarg-front/static')]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
