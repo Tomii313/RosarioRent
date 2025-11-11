@@ -184,15 +184,13 @@ USE_TZ = True
 # Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-# Si estás en Render (producción)
-if os.environ.get('RENDER') or not DEBUG:
+# Si estamos en Render, usar la carpeta staticfiles (ya con tus archivos)
+if os.environ.get('RENDER'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = []
+    STATICFILES_DIRS = []  # Render usa solo lo que ya está en staticfiles
 else:
-    # Si estás desarrollando localmente
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, '../rentarg-front/static'),
-    ]
+    # En local sí usás rentarg-front
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, '../rentarg-front/static')]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
