@@ -233,9 +233,12 @@ ACCOUNT_MESSAGES = False  # Esto hace que no muestre "Ha iniciado sesión exitos
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_URL = 'cloudinary://578455854398419:zFlcTyRlld1pYH8Yjwj19EPn4Mc@dmf1dpxig'
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dmf1dpxig',
     'API_KEY': '578455854398419',
     'API_SECRET': 'zFlcTyRlld1pYH8Yjwj19EPn4Mc',
 }
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
