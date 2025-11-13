@@ -104,6 +104,11 @@
             color: rgba(255,255,255,0.7);
             font-size: 14px;
         }
+         @media (max-width: 767px) { 
+            #contactar{
+            margin-top:25px;
+            }
+         }
     </style>
 </head>
 <body>
@@ -115,7 +120,7 @@
                 Encontremos un nuevo hogar para usted.</h3>
             <div>
                 <a href="{% url 'home' %}" class="btn btn-success btn-custom">🏠 Volver al Inicio</a>
-                <a href="#" class="btn btn-secondary btn-custom">📞 Contactar</a>
+                <a href="#" class="btn btn-secondary btn-custom" id="contactar">📞 Contactar</a>
             </div>
         </div>
         <footer>

@@ -41,7 +41,7 @@ class UsuarioPersonalizado(AbstractUser):
     baneado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.username} {self.dni} {self.email}"
 
 
 class Comentario(models.Model):

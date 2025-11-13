@@ -199,6 +199,20 @@ input[type="checkbox"]:disabled:checked {
 .favorito-label span{
   margin-left:10px;
 }
+
+ @media (max-width: 767px) { 
+ #btneliminar{
+  margin-bottom:-50px;
+ }
+
+ #parraforesponsive{
+  padding:40px;
+ } 
+ #mapa{
+  margin-top:90px;
+ }
+
+ }
     </style>
 </head>
 <body>
@@ -348,7 +362,7 @@ input[type="checkbox"]:disabled:checked {
      {%endif%}
      </div>
 
-        <div class="mb-3">
+        <div class="mb-3" id="mapa">
           
 {% if lat and lon %}
    
@@ -371,11 +385,11 @@ input[type="checkbox"]:disabled:checked {
         </p>
     </div>
 {%elif oficina.zona == "Otro"%}
-<P>No hay coordenadas disponibles para esta oficina.</P>
+<P id="parraforesponsive">No hay coordenadas disponibles para esta oficina.</P>
 
 
 {% else %}
-    <p>No hay coordenadas disponibles para esta oficina.</p>
+    <p id="parraforesponsive">No hay coordenadas disponibles para esta oficina.</p>
 {% endif %}
 
            <hr class="my-4">

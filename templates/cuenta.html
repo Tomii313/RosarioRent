@@ -87,6 +87,28 @@
             flex: 1 1 30%;
             min-width: 300px;
         }
+        @media (max-width: 768px) {
+  .masthead {
+      margin-top: 0;             /* ya no lo subimos */
+      align-items: center;       /* centramos el avatar verticalmente */
+      padding-top: 100px;        /* un poco de aire arriba */
+      
+  }
+
+  #eliminaravatar{
+    margin-top: 10px;
+
+  }
+   .profile-card {
+      width: 90%;                /* que no se corte en el borde */
+      padding: 20px;
+  }
+
+  .profile-card img {
+      width: 100px !important;
+      height: 100px !important;
+  }
+}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -133,7 +155,7 @@
         </form>
         <form method="post" style="display:inline;">
             {% csrf_token %}
-        <button type="submit" class="btn btn-danger" name="eliminaravatar">Eliminar Avatar</button>
+        <button type="submit" class="btn btn-danger" id="eliminaravatar" name="eliminaravatar">Eliminar Avatar</button>
         </form>
     </div>
     <h2><i class="fas fa-user-circle"></i> {{ user.nombre|default:user.first_name|default:"Anónimo"}} {{ user.apellido|default:user.last_name }}</h2>

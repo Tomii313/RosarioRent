@@ -7,14 +7,14 @@
         </a>
      </nav>
 
-<div class="d-flex justify-content-center align-items-center vh-100" 
+<div class="d-flex justify-content-center align-items-center vh-100" id="coment" 
      style="background: linear-gradient(135deg, #000000, #243b55);">
   <div class="card shadow-lg p-5 text-white" 
        style="max-width: 600px; width: 100%; border-radius: 15px; background-color: #1f2a38;">
     <h3 class="text-center mb-4 fw-bold">Editar comentario</h3>
     <form method="post">
       {% csrf_token %}
-      <div class="mb-3" style="margin-left:50px;">
+      <div class="mb-3" style="margin-left:50px;" id="comentexto">
         {{ form.texto}}
       </div>
       <div class="d-flex justify-content-between mt-4">
@@ -29,4 +29,26 @@
     </form>
   </div>
 </div>
+<style>
+  .navbar-brand{
+ margin-left: 20px;
+}
+
+      body, html {
+    overflow-x: hidden;
+}
+  @media(max-width:767px){
+
+
+textarea{
+  width:200px;
+}
+
+.navbar-brand{
+ margin-left: 20px;
+}
+
+
+  }
+</style>
 {% endblock %}

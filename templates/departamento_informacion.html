@@ -203,6 +203,21 @@ input[type="checkbox"]:disabled:checked {
   margin-left:10px;
 }
 
+ @media (max-width: 767px) { 
+ #btneliminar{
+  margin-bottom:-50px;
+ }
+
+ #parraforesponsive{
+  padding:40px;
+ } 
+ #mapa{
+  margin-top:90px;
+ }
+
+ }
+
+ 
     </style>
 </head>
 <body>
@@ -356,7 +371,7 @@ input[type="checkbox"]:disabled:checked {
     </form>
      {%endif%}
      </div>
-    <div class="mb-3 text-center">
+    <div class="mb-3 text-center" id="mapa">
    
 
 {% if lat and lon %}
@@ -377,11 +392,11 @@ input[type="checkbox"]:disabled:checked {
         </p>
    
 {%elif departamento.zona == "Otro"%}
-<P>No hay coordenadas disponibles para este departamento.</P>
+<P id="parraforesponsive">No hay coordenadas disponibles para este departamento.</P>
 
 
 {% else %}
-    <p>No hay coordenadas disponibles para este departamento.</p>
+    <p id="parraforesponsive">No hay coordenadas disponibles para este departamento.</p>
 {% endif %}
 </div>
         <div class="mt-5">
