@@ -87,5 +87,7 @@ class Oficina(models.Model):
 class ImagenOficina(models.Model):
     oficina = models.ForeignKey(Oficina, related_name="imagenes", on_delete=models.CASCADE)
     imagen = CloudinaryField('imagen', null=True, blank=True)
+
+    def __str__(self):
         return f"Imagen de {self.oficina.direccion}"
 
