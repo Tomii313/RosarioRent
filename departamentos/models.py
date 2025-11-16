@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from geopy.geocoders import Nominatim
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -68,13 +69,14 @@ class Departamentos(models.Model):
     descripcion = models.TextField()
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
-    imagen = models.ImageField(upload_to="departamentos/", blank=True, null=True)
+    imagen = CloudinaryField('imagen')
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     habitaciones = models.IntegerField(validators=[MinValueValidator(0, message='Inserte un valor valido'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     banos = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 baño'), MaxValueValidator(8, message="Seleccione una cantidad correcta")])
     disponibilidad = models.BooleanField(default=True)
     aprobado = models.BooleanField(default=False)
     zona = models.CharField(max_length=50, null=True, blank=True, choices=BARRIOS)
+
     
 
    
@@ -95,7 +97,7 @@ class Departamentos(models.Model):
 
 class ImagenDepartamento(models.Model):
     departamento = models.ForeignKey(Departamentos, on_delete=models.CASCADE, related_name="imagenes")
-    imagen = models.ImageField(upload_to="departamentos/imagenes", blank=True, null=True)
+    imagen = CloudinaryField('imagen')
 
     def __str__(self):
         return f"Imagen de {self.departamento.nombre}"

@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from geopy.geocoders import Nominatim
-
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 
@@ -67,7 +67,7 @@ class salones(models.Model):
     monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     aprobado = models.BooleanField(default=False)
-    imagen = models.ImageField(upload_to="salones/", blank=True, null=True)
+    imagen = CloudinaryField('imagen')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
   
@@ -85,7 +85,7 @@ class salones(models.Model):
 
 class ImagenSalon(models.Model):
     salon = models.ForeignKey(salones, related_name="imagenes", on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to="salones/imagenes/", blank=True, null=True)
+    imagen = CloudinaryField('imagen')
 
     def __str__(self):
         return f"Imagen de {self.salon.nombre}"

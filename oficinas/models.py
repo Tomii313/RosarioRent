@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from geopy.geocoders import Nominatim
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 BARRIOS = [
@@ -62,6 +63,7 @@ class Oficina(models.Model):
     ambientes = models.IntegerField(validators=[MinValueValidator(1, message="Debe tener al menos 1 ambiente"), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     piso = models.IntegerField(null=True, blank=True)
     latitud = models.FloatField(null=True, blank=True)
+    imagen = CloudinaryField('imagen')
     longitud = models.FloatField(null=True, blank=True)
     departamento = models.CharField(max_length=2,null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True)
@@ -84,7 +86,7 @@ class Oficina(models.Model):
         return f"{self.propietario.nombre} - {self.direccion} - {self.ambientes} - {self.precio}"
 class ImagenOficina(models.Model):
     oficina = models.ForeignKey(Oficina, related_name="imagenes", on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to="oficinas/imagenes/", blank=True, null=False, default='media/oficinas/imagenes/default.jpg')
+    imagen = CloudinaryField('imagen')
 
     def __str__(self):
         return f"Imagen de {self.oficina.direccion}"
