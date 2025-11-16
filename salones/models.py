@@ -67,7 +67,7 @@ class salones(models.Model):
     monedas = models.CharField(max_length=3, choices=MONEDAS, default="ARS")
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     aprobado = models.BooleanField(default=False)
-    imagen = CloudinaryField('imagen')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
   
@@ -85,7 +85,7 @@ class salones(models.Model):
 
 class ImagenSalon(models.Model):
     salon = models.ForeignKey(salones, related_name="imagenes", on_delete=models.CASCADE)
-    imagen = CloudinaryField('imagen')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
 
     def __str__(self):
         return f"Imagen de {self.salon.nombre}"

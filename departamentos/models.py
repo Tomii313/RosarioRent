@@ -69,7 +69,7 @@ class Departamentos(models.Model):
     descripcion = models.TextField()
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
-    imagen = CloudinaryField('imagen')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     habitaciones = models.IntegerField(validators=[MinValueValidator(0, message='Inserte un valor valido'), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     banos = models.IntegerField(validators=[MinValueValidator(1, message='Debe tener al menos 1 baño'), MaxValueValidator(8, message="Seleccione una cantidad correcta")])
@@ -97,7 +97,7 @@ class Departamentos(models.Model):
 
 class ImagenDepartamento(models.Model):
     departamento = models.ForeignKey(Departamentos, on_delete=models.CASCADE, related_name="imagenes")
-    imagen = CloudinaryField('imagen')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
 
     def __str__(self):
         return f"Imagen de {self.departamento.nombre}"

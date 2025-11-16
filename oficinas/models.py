@@ -63,7 +63,7 @@ class Oficina(models.Model):
     ambientes = models.IntegerField(validators=[MinValueValidator(1, message="Debe tener al menos 1 ambiente"), MaxValueValidator(20, message="Seleccione una cantidad correcta")])
     piso = models.IntegerField(null=True, blank=True)
     latitud = models.FloatField(null=True, blank=True)
-    imagen = CloudinaryField('imagen')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
     departamento = models.CharField(max_length=2,null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True)
@@ -86,8 +86,6 @@ class Oficina(models.Model):
         return f"{self.propietario.nombre} - {self.direccion} - {self.ambientes} - {self.precio}"
 class ImagenOficina(models.Model):
     oficina = models.ForeignKey(Oficina, related_name="imagenes", on_delete=models.CASCADE)
-    imagen = CloudinaryField('imagen')
-
-    def __str__(self):
+    imagen = CloudinaryField('imagen', null=True, blank=True)
         return f"Imagen de {self.oficina.direccion}"
 
