@@ -239,12 +239,8 @@ def publicar_salones(request):
             messages.success(request, "Su publicación se ha realizado con éxito. En estos momentos se encuentra en estado PENDIENTE a la espera de ser aceptada.")
             lat, lon = geocode(f"{salon.direccion}, {salon.zona}")
 
-            try:
-                 if lat is None or lon is None:
-        # fallback seguro
-                    lat, lon = -32.9442, -60.6505
-            except:
-                 lat, lon = -32.9442, -60.6505
+           if lat is None or lon is None:
+                lat, lon = -32.9442, -60.6505
 
             salon.latitud = lat
             salon.longitud = lon
