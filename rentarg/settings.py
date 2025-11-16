@@ -29,7 +29,7 @@ from django.views.static import serve
 SECRET_KEY = 'django-insecure-xptpwuef388i_f@vm9%fkyisyk%0=(9d_be1(rcd$p8os6-v_-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     'rosariorent.onrender.com',
     'localhost',
@@ -186,15 +186,11 @@ USE_TZ = True
 # Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-# Detectar si estamos en Render
-IS_RENDER = os.environ.get('RENDER_EXTERNAL_HOSTNAME') is not None
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-if IS_RENDER:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, '../rentarg-front/static')]
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '../rentarg-front/static')
+]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
