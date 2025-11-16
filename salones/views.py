@@ -314,7 +314,7 @@ def eliminarpublicacion(request,id):
 def geocode(direccion, zona=None, ciudad="Rosario", pais="Argentina"):
     """
     Devuelve latitud y longitud usando Nominatim.
-    Combina dirección, zona, ciudad y país para aumentar la precisión.
+    Si Render bloquea la red, devuelve coords por defecto sin romper nada.
     """
     import requests
 
@@ -329,15 +329,17 @@ def geocode(direccion, zona=None, ciudad="Rosario", pais="Argentina"):
         "format": "json",
         "limit": 1
     }
-    headers = {"User-Agent": "RosarioRentApp"}  # obligatorio
+    headers = {"User-Agent": "RosarioRentApp"}
+
     try:
-        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response = requests.get(url, params=params, headers=headers, timeout=3)
         response.raise_for_status()
         data = response.json()
         if data:
             return float(data[0]['lat']), float(data[0]['lon'])
     except Exception as e:
+        # Logueamos el error pero NO rompemos nada
         print("Error geocoding:", e)
 
-    # fallback si no encuentra nada
-    return None, None
+    # fallback ABSOLUTAMENTE SEGURO (Render-friendly)
+    return -32.9442, -60.6505
