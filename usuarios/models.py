@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 
@@ -28,7 +29,7 @@ class UsuarioPersonalizado(AbstractUser):
     direccion = models.CharField(max_length=150, blank=True, null=True)
     num_calle = models.IntegerField(validators=[MinValueValidator(0, message="El número no puede ser menor a 0."), MaxValueValidator(10000, message="El número no puede ser mayor a 10.000")], null=True, blank=True)
     nacimiento = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(upload_to="avatars/", default="avatars/default_avatar.png", blank=True, null=True)
+    imagen = CloudinaryField('imagen', null=True, blank=True)
     email = models.EmailField(unique=True, blank=True, null=True)
     tipo = models.CharField(max_length=20, choices=TIPO_USUARIO, default='inquilino')
     #tipo_publicacion = models.CharField(max_length=20, choices=TIPO_PUBLICACION, blank=True, null=True)
