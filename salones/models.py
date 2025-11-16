@@ -85,7 +85,7 @@ class salones(models.Model):
 
 class ImagenSalon(models.Model):
     salon = models.ForeignKey(salones, related_name="imagenes", on_delete=models.CASCADE)
-    imagenes = request.FILES.getlist('imagenes')
+    imagen = CloudinaryField('imagen', null=True, blank=True)
 
     def __str__(self):
         return f"Imagen de {self.salon.nombre}"
