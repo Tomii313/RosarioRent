@@ -29,7 +29,7 @@ from django.views.static import serve
 SECRET_KEY = 'django-insecure-xptpwuef388i_f@vm9%fkyisyk%0=(9d_be1(rcd$p8os6-v_-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = [
     'rosariorent.onrender.com',
     'localhost',
@@ -229,14 +229,14 @@ ACCOUNT_MESSAGES = False  # Esto hace que no muestre "Ha iniciado sesión exitos
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-CLOUDINARY_URL = 'cloudinary://578455854398419:zFlcTyRlld1pYH8Yjwj19EPn4Mc@dmf1dpxig'
+""" CLOUDINARY_URL = 'cloudinary://578455854398419:zFlcTyRlld1pYH8Yjwj19EPn4Mc@dmf1dpxig'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dmf1dpxig',
     'API_KEY': '578455854398419',
     'API_SECRET': 'zFlcTyRlld1pYH8Yjwj19EPn4Mc',
 }
-
+ """
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
